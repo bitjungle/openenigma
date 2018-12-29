@@ -25,9 +25,9 @@ int inpin[4] = {A0, A1, A2, A3};
 int inval[4] = {0, 0, 0, 0};
 int keyval = 100;
 int kvalo = 100;
-boolean windex = 0;
-boolean windex1 = 0;
-boolean windex2 = 0;
+boolean windex = false;
+boolean windex1 = false;
+boolean windex2 = false;
 int lampval = 100;
 int procesval = 0;
 int procesvala = 0;
@@ -46,9 +46,9 @@ int dig2 = 37;
 int dig3 = 37;
 int dig4 = 37;
 
-int data[3][40] ={ {36,36,36,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,30,36,13,3,19,36,36,36,36},
-                  {36,36,36,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,30,36,36,3,19,36,36,36,36},
-                  {36,36,36,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,29,36,36,3,19,36,36,36,36}};
+int data[3][40] ={{37,36,36,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,30,36,13,3,19,36,36,36,36},
+                  {37,37,36,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,30,36,36,3,19,36,36,36,36},
+                  {37,37,37,36,18,39,19,36,6,4,14,19,17,14,13,8,2,18,36,4,13,8,6,12,0,36,12,0,17,10,36,29,36,36,3,19,36,36,36,36}};
 
 // Define the 16-Segments Pins as 2 Arrays
 int segment[17] = {24,22,25,31,38,36,32,30,28,26,23,27,33,35,34,29,37}; //cathode array
@@ -273,16 +273,16 @@ void loop() {
 // Keyboard debounce & test for new key pressed  
   time = millis();
   if (time > otime + 100) {keyval = readkbde();}
-  if(keyval == kvalo) {windex = 0;}
+  if(keyval == kvalo) {windex = false;}
   kvalo = keyval;
-  if ((mode == 0) && (keyval == 46) && (windex ==1)) { 
+  if ((mode == 0) && (keyval == 46) && (windex == true)) { 
     behavior ++; 
-    windex = 0; 
+    windex = false; 
     if(behavior > 2) {
       behavior = 0; 
     } 
   }
-  if((keyval == 45) && (windex ==1)) {modeselect();}
+  if((keyval == 45) && (windex == true)) {modeselect();}
 // The whole Enigma machine operation revolves around which Operating Mode is current  
   if(mode == 0) {mode0();}
   else if(mode == 1) {mode1();}
@@ -345,7 +345,7 @@ int readkbde() {
   if(kval < 99) {otime = millis();}
   
   //Starts key debounce timer
-  if ((kval >= 0) && (kval <= 99)) {windex = 1;}  //windex showing true (1) indicates the return of a fresh key stroke
+  if ((kval >= 0) && (kval <= 99)) {windex = true;}  //windex showing true (1) indicates the return of a fresh key stroke
   Serial.println(kval);
   return kval;
 }
@@ -356,7 +356,7 @@ int readkbde() {
 void modeselect() {
   mode++;
   if(mode >=6) {mode = 0;}
-  windex = 0;
+  windex = false;
 }
 
 /**
@@ -383,10 +383,11 @@ void mode1() {
   int index;
   digitalWrite(led1, HIGH);
 
-  if (windex == 1) {
+  if (windex == true) {
     if ((keyval == 43) || (keyval == 46)) { 
       if (behavior != 2) {
-        wheel[3][0]++;windex = 0; 
+        wheel[3][0]++;
+        windex = false; 
         if (wheel[3][0] > 2) {
           wheel[3][0] = 1; 
           reflect[0]++; 
@@ -395,7 +396,8 @@ void mode1() {
             }
           } 
       } else {
-        reflect[0]++; windex = 0; 
+        reflect[0]++; 
+        windex = false; 
         if (reflect[0] > 2) {
           reflect[0] = 1;
         } 
@@ -403,17 +405,17 @@ void mode1() {
     }
   }
 
-  if (windex == 1) {
+  if (windex == true) {
     if (keyval == 47) { 
       for (index = wheel[2][0]; (index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index++) {
         if(index > 33) {index = 26;} 
       }
       wheel[2][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
 
-  if (windex == 1) {
+  if (windex == true) {
     if(keyval == 48) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index++) {
         if (index > 33) {
@@ -421,10 +423,10 @@ void mode1() {
         } 
       } 
       wheel[1][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
-  if (windex == 1) {
+  if (windex == true) {
     if(keyval == 49) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
         if (index > 33) {
@@ -432,10 +434,10 @@ void mode1() {
         } 
       } 
       wheel[0][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
-  if (windex == 1) {
+  if (windex == true) {
     if(keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
         if (index < 28) {
@@ -443,10 +445,10 @@ void mode1() {
         } 
       } 
       wheel[2][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
-  if (windex == 1) {
+  if (windex == true) {
     if(keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
         if (index < 28) {
@@ -454,10 +456,10 @@ void mode1() {
         } 
       } 
       wheel[1][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
-  if (windex == 1) {
+  if (windex == true) {
     if(keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
         if (index < 28) {
@@ -465,7 +467,7 @@ void mode1() {
         } 
       } 
       wheel[0][0] = index;  
-      windex = 0;
+      windex = false;
     }
   }
     
@@ -503,7 +505,7 @@ void mode1() {
  */
 void mode2() {
   digitalWrite(led2, HIGH);
-  if (windex == 1) {
+  if (windex == true) {
     if (behavior != 2) { 
       if (keyval == 46) {
         wheel[3][1]++; 
@@ -556,7 +558,7 @@ void mode2() {
         wheel[0][1] = 25;
       }
     }
-    windex = 0; 
+    windex = false; 
   }
   
   dig2 = wheel[2][1];  
@@ -584,7 +586,7 @@ void mode2() {
  */
 void mode3() {
   digitalWrite(led3, HIGH);
-  if (windex == 1) {
+  if (windex == true) {
     if(behavior != 2) { 
       if(keyval == 46) {
         wheel[3][2]++; 
@@ -637,7 +639,7 @@ void mode3() {
         wheel[0][2] = 25;
       }
     }
-    windex = 0; 
+    windex = false; 
   }
   
   dig2 = wheel[2][2];  
@@ -679,41 +681,41 @@ void mode4() {
       pbindex = index;
     }
   
-    if (windex == 1)  { 
+    if (windex == true)  { 
       if (keyval == 46) { 
         for (index = paindex;(index == paindex) || (index == pbindex) || (plugval[0][index] == 1); index++) {
           if (index > 24) {index = -1;}
         } 
         paindex = index; 
-        windex = 0; 
+        windex = false; 
       }
       if (keyval == 43) { 
         for (index = paindex;(index == paindex) || (index == pbindex) || (plugval[0][index] == 1); index--) {
           if (index < 1) {index = 26;}
         } 
         paindex = index; 
-        windex = 0;  
+        windex = false;  
       }
       if (keyval == 49) { 
         for (index = pbindex;(index == pbindex) || (index == paindex) || (plugval[0][index] == 1); index++) {
           if(index > 24) {index = -1;}
         } 
         pbindex = index; 
-        windex = 0; 
+        windex = false; 
       }
       if (keyval == 40) { 
         for( index = pbindex;(index == pbindex) || (index == paindex) || (plugval[0][index] == 1); index--) {
           if(index < 1) {index = 26;}
         } 
         pbindex = index; 
-        windex = 0;  
+        windex = false;  
       }
       if(keyval == 44) { 
         plugval[0][paindex] = 1; 
         plugval[1][paindex] = pbindex; 
         plugval[0][pbindex] = 1; 
         plugval[1][pbindex] = paindex; 
-        windex = 0; 
+        windex = false; 
         pluguse++;
       }
     }
@@ -747,7 +749,7 @@ void mode5() {
   } else {
     int windexb = windex;
     if ((keyval >= 0) && (keyval <= 25)) {  
-      if (windex == 1) { 
+      if (windex == true) { 
         procesvala = keyval;  
         indexwheels();
       }
@@ -840,7 +842,7 @@ void mode5() {
     }
     lampval = procesval;
   }
-  windex = 0;
+  windex = false;
   //Serial.println(lampval);
   dig2 = wheel[2][2];  
   dig3 = wheel[1][2]; 
@@ -921,7 +923,7 @@ void sixteenSegWrite(int digit, int character) {
     digitalWrite(segment[index], segmentvals[character][index]);
   }
   delay(3);
-  for (int index =0; index <= 16; index++) {
+  for (int index = 0; index <= 16; index++) {
     digitalWrite(segment[index], 1);   
   }
   digitalWrite(anode[digit], 1);
@@ -943,28 +945,28 @@ void done() {
 void indexwheels() {
   if (behavior > 0) { 
     if (rotorvals[wheel[1][0]-27][wheel[1][2]] >= 100) {
-      windex1 = 1;
+      windex1 = true;
       if (behavior < 2) { 
-        windex2 = 1;
+        windex2 = true;
       }
     }
   }
   // Serial.print(rotorvals[wheel[0][0]-27][wheel[0][2]]);
   // Serial.print("    "); Serial.print(wheel[0][0]-27); Serial.print("    "); Serial.println(wheel[0][2]);
-  if (rotorvals[wheel[0][0]-27][wheel[0][2]] >= 100) {windex1 = 1;}
+  if (rotorvals[wheel[0][0]-27][wheel[0][2]] >= 100) {windex1 = true;}
   wheel[0][2]++; 
   if(wheel[0][2] > 25) {wheel[0][2] = 0;}
-  windex = 0;
+  windex = false;
   if (windex1 == 1) {
     if (rotorvals[wheel[1][0]-27][wheel[1][2]] >= 100) {
-      windex2 = 1;
+      windex2 = true;
     }
     wheel[1][2]++; if(wheel[1][2] > 25) {wheel[1][2] = 0;}
   }
-  windex1 = 0;
+  windex1 = false;
   if(windex2 == 1){
     wheel[2][2]++; if(wheel[2][2] > 25) {wheel[2][2] = 0;}
-    windex2 = 0; 
+    windex2 = false; 
   } 
 }
 
