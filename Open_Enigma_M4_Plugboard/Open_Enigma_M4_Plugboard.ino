@@ -19,6 +19,7 @@
 */
 
 // Define the variables
+const boolean DEBUG = true; // set to false for production unit
 unsigned long time = millis();
 unsigned long otime = time;
 int inpin[4] = {A0, A1, A2, A3};
@@ -217,6 +218,10 @@ int plugval [2][26] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 int pluguse = 0; int paindex = 0; int pbindex = 1;
 int prindex = 0;
 int prtindex = 0;
+
+/**
+ * 
+ */
 void setup() {
 // Initialize all 29 LED pins as Output  
   for (int index = 0; index <= 2; index++) {
@@ -292,7 +297,6 @@ void loop() {
   else if(mode == 5) {mode5();}
   else {/* Do nothing */}
 
-Serial.println(keyval); // for debuging prints keybord value to serial monitor// for run or del
 }
 
 /**
@@ -346,7 +350,8 @@ int readkbde() {
   
   //Starts key debounce timer
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  //windex showing true (1) indicates the return of a fresh key stroke
-  Serial.println(kval);
+  // for debugging, prints keybord value to serial monitor
+  if (DEBUG && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
   return kval;
 }
 
@@ -355,7 +360,8 @@ int readkbde() {
  */
 void modeselect() {
   mode++;
-  if(mode >=6) {mode = 0;}
+  if (mode >=6) {mode = 0;}
+  if (DEBUG) {Serial.print("modeselect() : mode="); Serial.println(mode);}
   windex = false;
 }
 
@@ -594,7 +600,7 @@ void mode3() {
           wheel[3][2] = 0;
         }
       }
-    }                                                                          // {reflect[1]++; if(reflect[1] > 25) {reflect[1] = 0;}}}
+    }    // {reflect[1]++; if(reflect[1] > 25) {reflect[1] = 0;}}}
     if (keyval == 47) {
       wheel[2][2]++; 
       if (wheel[2][2] > 25) {
@@ -620,7 +626,7 @@ void mode3() {
           wheel[3][2] = 25;
         }
       }
-    }                                                                          // {reflect[1]--; if(reflect[1] < 0) {reflect[1] = 25;}}}
+    }    // {reflect[1]--; if(reflect[1] < 0) {reflect[1] = 25;}}}
     if (keyval == 42) {
       wheel[2][2]--; 
       if(wheel[2][2] < 0) {
@@ -756,7 +762,7 @@ void mode5() {
     }    
     procesval = procesvala;
     procesval = plugval[1][procesval];
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -765,7 +771,7 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-//  Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -774,7 +780,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -783,7 +789,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if(pv < 0) {pv = pv + 26;}
@@ -792,10 +798,10 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     procesval = rotorvals[reflect[0] + 9][procesval];
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print (procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -804,7 +810,7 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -813,7 +819,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
 
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -822,7 +828,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
   
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
@@ -831,7 +837,7 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}   
-  // Serial.print (procesval); Serial.print("   ");
+    if (DEBUG) {Serial.print(procesval); Serial.print("   ");}
    
     procesval = plugval[1][procesval];
     if(windexb == 1) {
@@ -843,7 +849,7 @@ void mode5() {
     lampval = procesval;
   }
   windex = false;
-  //Serial.println(lampval);
+  if (DEBUG && lampval != 100) {Serial.print("lampval="); Serial.println(lampval);}
   dig2 = wheel[2][2];  
   dig3 = wheel[1][2]; 
   dig4 = wheel[0][2]; 
@@ -951,8 +957,13 @@ void indexwheels() {
       }
     }
   }
-  // Serial.print(rotorvals[wheel[0][0]-27][wheel[0][2]]);
-  // Serial.print("    "); Serial.print(wheel[0][0]-27); Serial.print("    "); Serial.println(wheel[0][2]);
+  if (DEBUG) {
+    Serial.print("indexwheels() : "); 
+    Serial.print(rotorvals[wheel[0][0]-27][wheel[0][2]]);
+    Serial.print("    "); 
+    Serial.print(wheel[0][0]-27); Serial.print("    "); 
+    Serial.println(wheel[0][2]);
+  }
   if (rotorvals[wheel[0][0]-27][wheel[0][2]] >= 100) {windex1 = true;}
   wheel[0][2]++; 
   if(wheel[0][2] > 25) {wheel[0][2] = 0;}
@@ -961,11 +972,13 @@ void indexwheels() {
     if (rotorvals[wheel[1][0]-27][wheel[1][2]] >= 100) {
       windex2 = true;
     }
-    wheel[1][2]++; if(wheel[1][2] > 25) {wheel[1][2] = 0;}
+    wheel[1][2]++; 
+    if(wheel[1][2] > 25) {wheel[1][2] = 0;}
   }
   windex1 = false;
   if(windex2 == 1){
-    wheel[2][2]++; if(wheel[2][2] > 25) {wheel[2][2] = 0;}
+    wheel[2][2]++; 
+    if(wheel[2][2] > 25) {wheel[2][2] = 0;}
     windex2 = false; 
   } 
 }
