@@ -53,3 +53,6 @@ dkms.conf
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# VS Code files
+.vscode/*
