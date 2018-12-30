@@ -19,7 +19,7 @@
 */
 
 // Define global variables
-const boolean DEBUG = true; // Set to false for production units
+boolean debug = false; // Change to behavior=1 in mode 0 to enable (key 46)
 
 const int NUMCHARS = 26;    // Number of characters available on the Enigma
 const char CHARS[NUMCHARS+1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Including NULL 
@@ -45,7 +45,7 @@ int procesvala = 0;
 int mode = 0;
 int mdex = 0;
 
-int behavior = 1; // Switch between various Enigma models
+int behavior = 0; // Switch between various Enigma models and enable serial output for debugging
 
 boolean plugread = false; // Toggle after plogboard has been read
 
@@ -58,10 +58,10 @@ int dig2 = 37;
 int dig3 = 37;
 int dig4 = 37;
 
-const int MARQUEEMAXCHARS = 12;
-const int MARQUEETEXT[3][MARQUEEMAXCHARS] ={{36,4,13,8,6,12,0,36,12,30,36,36}, //Enigma M4
-                                            {36,4,13,8,6,12,0,36,12,30,36,36}, //Enigma M4
-                                            {36,4,13,8,6,12,0,36,12,29,36,36}};//Enigma M3
+const int MARQUEEMAXCHARS = 15;
+const int MARQUEETEXT[3][MARQUEEMAXCHARS] ={{36,4,13,8,6,12,0,36,12,30,36,36,36,36,36}, //Enigma M4
+                                            {36,4,13,8,6,12,0,36,12,30,36,3,1,6,36},    //Enigma M4 DBG
+                                            {36,4,13,8,6,12,0,36,12,29,36,36,36,36,36}};//Enigma M3
 
 // Define the 16-Segment LED Pins as 2 Arrays
 const int SEGMENTPINS[17] = {24,22,25,31,38,36,32,30,28,26,23,27,33,35,34,29,37}; //cathode array
@@ -337,11 +337,18 @@ void loop() {
   if(keyval == kvalo) {windex = false;}
   kvalo = keyval;
   if ((mode == 0) && (keyval == 46) && (windex == true)) { 
+    // Change behavior in mode0 using key 46 (top left key)
     behavior++; 
     windex = false; 
-    if(behavior > 2) {
-      behavior = 0; 
+    if (behavior == 1) {
+      debug = true; 
+    } else {
+      debug = false; 
+    }
+    if (behavior > 2) {
+      behavior = 0; // resetting
     } 
+    if (debug) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
   if((keyval == 45) && (windex == true)) {modeselect();}
 // The whole Enigma machine operation revolves around which Operating Mode is current  
@@ -407,8 +414,8 @@ int readkbde() {
   //Starts key debounce timer
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  //windex showing true (1) indicates the return of a fresh key stroke
   // for debugging, prints keybord value to serial monitor
-  if (DEBUG && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
-  if (DEBUG && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
+  if (debug && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
+  if (debug && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
   return kval;
 }
 
@@ -418,7 +425,7 @@ int readkbde() {
 void modeselect() {
   mode++;
   if (mode >=6) {mode = 0;}
-  if (DEBUG) {Serial.print("modeselect() : mode="); Serial.println(mode);}
+  if (debug) {Serial.print("modeselect() : mode="); Serial.println(mode);}
   windex = false;
 }
 
@@ -824,7 +831,7 @@ void mode5() {
     // Character input
     procesval = procesvala;
     procesval = plugval[1][procesval];
-    if (DEBUG) {signalpath[0] = CHARS[procesval];}
+    if (debug) {signalpath[0] = CHARS[procesval];}
   
     // Fast rotor
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
@@ -834,7 +841,7 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[1] = CHARS[procesval];}
+    if (debug) {signalpath[1] = CHARS[procesval];}
   
     // Middle rotor
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
@@ -844,7 +851,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[2] = CHARS[procesval];}
+    if (debug) {signalpath[2] = CHARS[procesval];}
   
     // Slow rotor 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
@@ -854,7 +861,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[3] = CHARS[procesval];}
+    if (debug) {signalpath[3] = CHARS[procesval];}
   
     // Thin rotor
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
@@ -864,11 +871,11 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[4] = CHARS[procesval];}
+    if (debug) {signalpath[4] = CHARS[procesval];}
   
     // Reflector
     procesval = ROTORVALS[reflect[0] + 9][procesval];
-    if (DEBUG) {signalpath[5] = CHARS[procesval];}
+    if (debug) {signalpath[5] = CHARS[procesval];}
   
     // Thin rotor return
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
@@ -878,7 +885,7 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[6] = CHARS[procesval];}
+    if (debug) {signalpath[6] = CHARS[procesval];}
 
     // Slow rotor return
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
@@ -888,7 +895,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[7] = CHARS[procesval];}
+    if (debug) {signalpath[7] = CHARS[procesval];}
 
     // Middle rotor return
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
@@ -898,7 +905,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {signalpath[8] = CHARS[procesval];}
+    if (debug) {signalpath[8] = CHARS[procesval];}
   
     // Fast rotor return
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
@@ -908,9 +915,9 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}   
-    if (DEBUG) {signalpath[9] = CHARS[procesval];}
+    if (debug) {signalpath[9] = CHARS[procesval];}
    
-    if (DEBUG) {Serial.println(signalpath);}
+    if (debug) {Serial.println(signalpath);}
 
     procesval = plugval[1][procesval];
     if (windexb == 1) {
@@ -1029,7 +1036,7 @@ void indexwheels() {
       }
     }
   }
-  if (DEBUG) {
+  if (debug) {
     Serial.print("indexwheels() : "); 
     Serial.print(ROTORVALS[wheel[0][0]-27][wheel[0][2]]); Serial.print("    "); 
     Serial.print(wheel[0][0]-27); Serial.print("    "); 
@@ -1070,7 +1077,7 @@ void readplugs() {
         plugval[0][indexb] = 1;
         plugval[1][index] = indexb; 
         plugval[1][indexb] = index;
-      if (DEBUG) {Serial.print("readplugs() : "); Serial.print(CHARS[index]); Serial.print(" -> "); Serial.println(CHARS[indexb]);}
+      if (debug) {Serial.print("readplugs() : "); Serial.print(CHARS[index]); Serial.print(" -> "); Serial.println(CHARS[indexb]);}
       }
     }
     pinMode(PLUGPINS[index], INPUT);
