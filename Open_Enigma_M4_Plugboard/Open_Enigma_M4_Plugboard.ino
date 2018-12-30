@@ -47,10 +47,10 @@ int mdex = 0;
 
 int behavior = 1; // Switch between various Enigma models
 
-int plugred = 0;
+boolean plugread = false; // Toggle after plogboard has been read
 
 // Define Plug Board Pins
-const int PLUGPINS[NUMCHARS] = {A14, 49, A12, A15, 7, 53, 50, 52, 3, A6, A4, A11, A9, A10, 8, A7, 6, 4, 51, 10, 9, A5, 5, A8, A13, 2} ;
+const int PLUGPINS[NUMCHARS] = {A14,49,A12,A15,7,53,50,52,3,A6,A4,A11,A9,A10,8,A7,6,4,51,10,9,A5,5,A8,A13,2} ;
 
 // Define each Nixie character
 int dig1 = 37;
@@ -726,7 +726,7 @@ void mode3() {
  * Define the Plugboard pairs  
  */
 void mode4() {
-  if(plugred == 0) {readplugs(); }
+  if(!plugread) {readplugs(); }
   int index = 0;
   digitalWrite(LED4, HIGH);
 
@@ -1060,5 +1060,5 @@ void readplugs() {
     }
     pinMode(PLUGPINS[index], INPUT);
   }
-  plugred = 1;
+  plugread = true;
 }
