@@ -340,7 +340,7 @@ void loop() {
   if (keyval == kvalo) {windex = false;} // No new keystroke detected
   kvalo = keyval;
 
-  if ((mode == 0) && (keyval == 46) && (windex == true)) { 
+  if ((mode == 0) && (keyval == 46) && (windex)) { 
     // Change behavior in mode 0 using key 46 (top left key)
     behavior++; 
     windex = false; 
@@ -355,7 +355,7 @@ void loop() {
     if (debug) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
 
-  if ((keyval == 45) && (windex == true)) {modeselect();}
+  if ((keyval == 45) && (windex)) {modeselect();}
   // The whole Enigma machine operation revolves around which operating mode is current  
   if (mode == 0) {mode0();}
   else if (mode == 1) {mode1();} // Rotors
@@ -457,7 +457,7 @@ void mode1() {
   int index;
   digitalWrite(LED1, HIGH);
 
-  if (windex == true) {
+  if (windex) {
     if ((keyval == 43) || (keyval == 46)) { 
       if (behavior != 2) {
         wheel[3][0]++;
@@ -479,7 +479,7 @@ void mode1() {
     }
   }
 
-  if (windex == true) {
+  if (windex) {
     if (keyval == 47) { 
       for (index = wheel[2][0]; (index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index++) {
         if (index > 33) {index = 26;} 
@@ -489,7 +489,7 @@ void mode1() {
     }
   }
 
-  if (windex == true) {
+  if (windex) {
     if (keyval == 48) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index++) {
         if (index > 33) {
@@ -500,7 +500,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex == true) {
+  if (windex) {
     if (keyval == 49) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
         if (index > 33) {
@@ -511,7 +511,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex == true) {
+  if (windex) {
     if (keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
         if (index < 28) {
@@ -522,7 +522,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex == true) {
+  if (windex) {
     if (keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
         if (index < 28) {
@@ -533,7 +533,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex == true) {
+  if (windex) {
     if (keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
         if (index < 28) {
@@ -579,7 +579,7 @@ void mode1() {
  */
 void mode2() {
   digitalWrite(LED2, HIGH);
-  if (windex == true) {
+  if (windex) {
     if (behavior != 2) { 
       if (keyval == 46) {
         wheel[3][1]++; 
@@ -660,7 +660,7 @@ void mode2() {
  */
 void mode3() {
   digitalWrite(LED3, HIGH);
-  if (windex == true) {
+  if (windex) {
     if (behavior != 2) { 
       if (keyval == 46) {
         wheel[3][2]++; 
@@ -755,7 +755,7 @@ void mode4() {
       pbindex = index;
     }
   
-    if (windex == true)  { 
+    if (windex)  { 
       if (keyval == 46) { 
         for (index = paindex;(index == paindex) || (index == pbindex) || (plugval[0][index] == 1); index++) {
           if (index > 24) {index = -1;}
@@ -824,9 +824,9 @@ void mode5() {
   if (keyval >= 26) { // A function key has been pressed
     lampval = 100;
   } else {            // A character key has been pressed
-    int windexb = windex;
+    boolean windexb = windex;
     if ((keyval >= 0) && (keyval <= 25)) {  
-      if (windex == true) { 
+      if (windex) { 
         procesvala = keyval;  
         indexwheels();
       }
@@ -924,9 +924,9 @@ void mode5() {
     if (debug) {Serial.println(signalpath);}
 
     procesval = plugval[1][procesval];
-    if (windexb == 1) {
+    if (windexb) {
       Serial3.write(procesval + 65);
-      prindex ++;
+      prindex++;
       if (prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
       if (prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
     }
