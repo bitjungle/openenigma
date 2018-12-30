@@ -819,7 +819,7 @@ void mode5() {
   int pv = 0;
   digitalWrite(LED5, HIGH);
   
-  char signalpath[10]; // Used for debugging and study of the internals of the Enigma
+  char signalpath[11]; // Used for debugging and study of the internals of the Enigma
 
   if (keyval >= 26) { // A function key has been pressed
     lampval = 100;
@@ -918,7 +918,7 @@ void mode5() {
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
-    if (procesval > 25) {procesval = procesval - 26;}   
+    if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[9] = CHARS[procesval];}
    
     if (debug) {Serial.println(signalpath);}
