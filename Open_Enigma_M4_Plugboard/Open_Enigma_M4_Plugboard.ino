@@ -856,7 +856,7 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -R-> ");}
+    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -||-> ");}
   
     procesval = ROTORVALS[reflect[0] + 9][procesval];
     if (DEBUG) {Serial.print (CHARS[procesval]); Serial.print(" -> ");}
