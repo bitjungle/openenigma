@@ -1,22 +1,25 @@
 #include <SoftwareSerial.h>
 
-/* S&T GeoTronics LLC  **** OPEN ENIGMA ****
-
-   This code is provided as is. S&T GeoTronics LLC, it's Partners and Associates provide it freely,
-   with no warranty of it's functionality, fitness for use or usefulness. In no way shall S&T GeoTronics LLC,
-   it's Partners and Associates be liable for the use, misuse, or damages of any kind due to the use or
-   misuse of this code or any associated hardware provided.
-   
-   Enigma Code. This Arduino Mega custom shield is programmed to replicate
-   exactly the behavior of a true German M4 Enigma machine.
-   It uses 4 16-Segment units, 5 LEDs, 26 Lamps setup as keyboard, 26 keyboard buttons
-   & 10 Function keys. The 115 light emitting diodes are multi-plexed to minimize the 
-   amount of pins needed down to 38 and all 36 pushbuttons keys are sharing a total of 4 pins.
-   Designed, assembled & programmed by Marc Tessier & James Sanderson 9/20/13
-   Modified for our Prototype PCB pair on 12/4/13.
-   Modified to obey doublesteping and have M3 function 22 MAR 14
-   This code shall remain in public domain as regulated under the creative commons licence.
-*/
+/** S&T GeoTronics LLC  **** OPEN ENIGMA ****
+ *
+ *   This code is provided as is. S&T GeoTronics LLC, it's Partners and Associates provide it freely,
+ *   with no warranty of it's functionality, fitness for use or usefulness. In no way shall S&T GeoTronics LLC,
+ *   it's Partners and Associates be liable for the use, misuse, or damages of any kind due to the use or
+ *   misuse of this code or any associated hardware provided.
+ *   
+ *   Enigma Code. This Arduino Mega custom shield is programmed to replicate
+ *   exactly the behavior of a true German M4 Enigma machine.
+ *   It uses 4 16-Segment units, 5 LEDs, 26 Lamps setup as keyboard, 26 keyboard buttons
+ *   & 10 Function keys. The 115 light emitting diodes are multi-plexed to minimize the 
+ *   amount of pins needed down to 38 and all 36 pushbuttons keys are sharing a total of 4 pins.
+ * 
+ *   - Designed, assembled & programmed by Marc Tessier & James Sanderson 9/20/13
+ *   - Modified for our Prototype PCB pair on 12/4/13.
+ *   - Modified to obey doublesteping and have M3 function 22 MAR 14
+ *   - Code formatting and documentation + debug to serial - bitjungle 2018-12-30
+ *
+ *   This code shall remain in public domain as regulated under the creative commons licence.
+ */
 
 // Define global variables
 boolean debug = false; // Change to behavior=1 in mode 0 to enable (key 46)
@@ -34,7 +37,7 @@ int inval[4] = {0, 0, 0, 0};
 int keyval = 100; // currently pressed key value
 int kvalo = 100;  // last read key value
 
-boolean windex = false;
+boolean windex = false; // windex showing true indicates the return of a fresh key stroke
 boolean windex1 = false;
 boolean windex2 = false;
 
@@ -70,30 +73,30 @@ const int ANODEPINS[4] = {39,41,43,45}; //anode array common anode
 // Define the 26 Lamps as a 2D Array 
 const int LAMPARRAY[NUMCHARS][2] = {{12,38}, // A
                                     {13,29}, // B
-                                    {13,33},
-                                    {12,35},
-                                    {11,35},
-                                    {12,33},
-                                    {12,31},
-                                    {12,29},
-                                    {11,25},
-                                    {12,27},
-                                    {12,25},
-                                    {13,23},
-                                    {13,25},
-                                    {13,27},
-                                    {11,23},
-                                    {13,38},
-                                    {11,38},
-                                    {11,33},
-                                    {12,37},
-                                    {11,31},
-                                    {11,27},
-                                    {13,31},
-                                    {11,37},
-                                    {13,35},
-                                    {13,37},
-                                    {11,29}};
+                                    {13,33}, // C
+                                    {12,35}, // D
+                                    {11,35}, // E
+                                    {12,33}, // F
+                                    {12,31}, // G
+                                    {12,29}, // H
+                                    {11,25}, // I
+                                    {12,27}, // J
+                                    {12,25}, // K
+                                    {13,23}, // L
+                                    {13,25}, // M
+                                    {13,27}, // N
+                                    {11,23}, // O
+                                    {13,38}, // P
+                                    {11,38}, // Q
+                                    {11,33}, // R
+                                    {12,37}, // S
+                                    {11,31}, // T
+                                    {11,27}, // U
+                                    {13,31}, // V
+                                    {11,37}, // W
+                                    {13,35}, // X
+                                    {13,37}, // Y
+                                    {11,29}};// Z
 
 //  Define the 12 Lamp Pins for initialization
 //int LAMPPINS[12] = {2,3,4,5,6,7,8,9,10,11,12,13}; //2 to 10 cathode, 11 to 13 common anode
@@ -331,13 +334,14 @@ void setup() {
  */
 void loop() {
  
-// Keyboard debounce & test for new key pressed  
+  // Keyboard debounce & test for new key pressed  
   time = millis();
   if (time > otime + 100) {keyval = readkbde();}
-  if(keyval == kvalo) {windex = false;}
+  if (keyval == kvalo) {windex = false;} // No new keystroke detected
   kvalo = keyval;
+
   if ((mode == 0) && (keyval == 46) && (windex == true)) { 
-    // Change behavior in mode0 using key 46 (top left key)
+    // Change behavior in mode 0 using key 46 (top left key)
     behavior++; 
     windex = false; 
     if (behavior == 1) {
@@ -350,16 +354,16 @@ void loop() {
     } 
     if (debug) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
-  if((keyval == 45) && (windex == true)) {modeselect();}
-// The whole Enigma machine operation revolves around which Operating Mode is current  
-  if(mode == 0) {mode0();}
-  else if(mode == 1) {mode1();}
-  else if(mode == 2) {mode2();}
-  else if(mode == 3) {mode3();}
-  else if(mode == 4) {mode4();}
-  else if(mode == 5) {mode5();}
-  else {/* Do nothing */}
 
+  if ((keyval == 45) && (windex == true)) {modeselect();}
+  // The whole Enigma machine operation revolves around which operating mode is current  
+  if (mode == 0) {mode0();}
+  else if (mode == 1) {mode1();} // Rotors
+  else if (mode == 2) {mode2();} // Inrings
+  else if (mode == 3) {mode3();} // Outrings
+  else if (mode == 4) {mode4();} // Plugs
+  else if (mode == 5) {mode5();} // Run
+  else {mode = 0;}
 }
 
 /**
@@ -371,48 +375,48 @@ int readkbde() {
   for (int index = 0; index <= 3; index++) { //Read analog input values
     inval[index] = analogRead(INPINS[index]);   
    } 
-  if((inval[0] > 982) && (inval[1] > 973) && (inval[2] > 966) && (inval[3] > 973))  {kval = 100;} // no key press
-  else if((inval[0] < 981) && (inval[0] > 903)) {kval = 49;} //up arrow 4
-  else if((inval[0] < 902) && (inval[0] > 831)) {kval = 48;} //up arrow 3
-  else if((inval[0] < 830) && (inval[0] > 762)) {kval = 47;} //up arrow 2
-  else if((inval[0] < 761) && (inval[0] > 693)) {kval = 46;} //up arrow 1
-  else if((inval[0] < 692) && (inval[0] > 622)) {kval = 45;} //mode
-  else if((inval[0] < 621) && (inval[0] > 545)) {kval = 44;} //enter
-  else if((inval[0] < 544) && (inval[0] > 458)) {kval = 43;}
-  else if((inval[0] < 457) && (inval[0] > 358)) {kval = 42;}
-  else if((inval[0] < 357) && (inval[0] > 237)) {kval = 41;}
-  else if(inval[0] < 236 ) {kval = 40;}
-  else if((inval[1] < 972) && (inval[1] > 875)) {kval = 16;}
-  else if((inval[1] < 874) && (inval[1] > 784)) {kval = 22;}
-  else if((inval[1] < 783) && (inval[1] > 696)) {kval = 4;}
-  else if((inval[1] < 695) && (inval[1] > 605)) {kval = 17;}
-  else if((inval[1] < 604) && (inval[1] > 507)) {kval = 19;}
-  else if((inval[1] < 506) && (inval[1] > 395)) {kval = 25;}
-  else if((inval[1] < 394) && (inval[1] > 261)) {kval = 20;}
-  else if((inval[1] < 260) && (inval[1] > 94)) {kval = 8;}
-  else if(inval[1] < 93 ) {kval = 14;}
-  else if((inval[2] < 965) && (inval[2] > 855)) {kval = 0;}
-  else if((inval[2] < 854) && (inval[2] > 752)) {kval = 18;}
-  else if((inval[2] < 751) && (inval[2] > 650)) {kval = 3;}
-  else if((inval[2] < 649) && (inval[2] > 542)) {kval = 5;}
-  else if((inval[2] < 541) && (inval[2] > 421)) {kval = 6;}
-  else if((inval[2] < 420) && (inval[2] > 278)) {kval = 7;}
-  else if((inval[2] < 277) && (inval[2] > 100)) {kval = 9;}
-  else if(inval[2] < 99 ) {kval = 10;}
-  else if((inval[3] < 972) && (inval[3] > 875)) {kval = 15;}
-  else if((inval[3] < 874) && (inval[3] > 784)) {kval = 24;}
-  else if((inval[3] < 783) && (inval[3] > 696)) {kval = 23;}
-  else if((inval[3] < 695) && (inval[3] > 605)) {kval = 2;}
-  else if((inval[3] < 604) && (inval[3] > 507)) {kval = 21;}
-  else if((inval[3] < 506) && (inval[3] > 395)) {kval = 1;}
-  else if((inval[3] < 394) && (inval[3] > 261)) {kval = 13;}
-  else if((inval[3] < 260) && (inval[3] > 94)) {kval = 12;}
-  else if(inval[3] < 93 ) {kval = 11;}
+  if ((inval[0] > 982) && (inval[1] > 973) && (inval[2] > 966) && (inval[3] > 973))  {kval = 100;} // no key press
+  else if ((inval[0] < 981) && (inval[0] > 903)) {kval = 49;} //up arrow 4
+  else if ((inval[0] < 902) && (inval[0] > 831)) {kval = 48;} //up arrow 3
+  else if ((inval[0] < 830) && (inval[0] > 762)) {kval = 47;} //up arrow 2
+  else if ((inval[0] < 761) && (inval[0] > 693)) {kval = 46;} //up arrow 1
+  else if ((inval[0] < 692) && (inval[0] > 622)) {kval = 45;} //mode
+  else if ((inval[0] < 621) && (inval[0] > 545)) {kval = 44;} //enter
+  else if ((inval[0] < 544) && (inval[0] > 458)) {kval = 43;}
+  else if ((inval[0] < 457) && (inval[0] > 358)) {kval = 42;}
+  else if ((inval[0] < 357) && (inval[0] > 237)) {kval = 41;}
+  else if (inval[0] < 236 ) {kval = 40;}
+  else if ((inval[1] < 972) && (inval[1] > 875)) {kval = 16;}
+  else if ((inval[1] < 874) && (inval[1] > 784)) {kval = 22;}
+  else if ((inval[1] < 783) && (inval[1] > 696)) {kval = 4;}
+  else if ((inval[1] < 695) && (inval[1] > 605)) {kval = 17;}
+  else if ((inval[1] < 604) && (inval[1] > 507)) {kval = 19;}
+  else if ((inval[1] < 506) && (inval[1] > 395)) {kval = 25;}
+  else if ((inval[1] < 394) && (inval[1] > 261)) {kval = 20;}
+  else if ((inval[1] < 260) && (inval[1] > 94)) {kval = 8;}
+  else if (inval[1] < 93 ) {kval = 14;}
+  else if ((inval[2] < 965) && (inval[2] > 855)) {kval = 0;}
+  else if ((inval[2] < 854) && (inval[2] > 752)) {kval = 18;}
+  else if ((inval[2] < 751) && (inval[2] > 650)) {kval = 3;}
+  else if ((inval[2] < 649) && (inval[2] > 542)) {kval = 5;}
+  else if ((inval[2] < 541) && (inval[2] > 421)) {kval = 6;}
+  else if ((inval[2] < 420) && (inval[2] > 278)) {kval = 7;}
+  else if ((inval[2] < 277) && (inval[2] > 100)) {kval = 9;}
+  else if (inval[2] < 99 ) {kval = 10;}
+  else if ((inval[3] < 972) && (inval[3] > 875)) {kval = 15;}
+  else if ((inval[3] < 874) && (inval[3] > 784)) {kval = 24;}
+  else if ((inval[3] < 783) && (inval[3] > 696)) {kval = 23;}
+  else if ((inval[3] < 695) && (inval[3] > 605)) {kval = 2;}
+  else if ((inval[3] < 604) && (inval[3] > 507)) {kval = 21;}
+  else if ((inval[3] < 506) && (inval[3] > 395)) {kval = 1;}
+  else if ((inval[3] < 394) && (inval[3] > 261)) {kval = 13;}
+  else if ((inval[3] < 260) && (inval[3] > 94)) {kval = 12;}
+  else if (inval[3] < 93 ) {kval = 11;}
   else {kval = 100;}
-  if(kval < 99) {otime = millis();}
+  if (kval < 99) {otime = millis();}
   
   //Starts key debounce timer
-  if ((kval >= 0) && (kval <= 99)) {windex = true;}  //windex showing true (1) indicates the return of a fresh key stroke
+  if ((kval >= 0) && (kval <= 99)) {windex = true;}  
   // for debugging, prints keybord value to serial monitor
   if (debug && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
   if (debug && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
@@ -478,7 +482,7 @@ void mode1() {
   if (windex == true) {
     if (keyval == 47) { 
       for (index = wheel[2][0]; (index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index++) {
-        if(index > 33) {index = 26;} 
+        if (index > 33) {index = 26;} 
       }
       wheel[2][0] = index;  
       windex = false;
@@ -486,7 +490,7 @@ void mode1() {
   }
 
   if (windex == true) {
-    if(keyval == 48) { 
+    if (keyval == 48) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index++) {
         if (index > 33) {
           index = 26;
@@ -497,7 +501,7 @@ void mode1() {
     }
   }
   if (windex == true) {
-    if(keyval == 49) { 
+    if (keyval == 49) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
         if (index > 33) {
           index = 26;
@@ -508,7 +512,7 @@ void mode1() {
     }
   }
   if (windex == true) {
-    if(keyval == 42) { 
+    if (keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
         if (index < 28) {
           index = 35;
@@ -519,7 +523,7 @@ void mode1() {
     }
   }
   if (windex == true) {
-    if(keyval == 41) { 
+    if (keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
         if (index < 28) {
           index = 35;
@@ -530,7 +534,7 @@ void mode1() {
     }
   }
   if (windex == true) {
-    if(keyval == 40) { 
+    if (keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
         if (index < 28) {
           index = 35;
@@ -545,13 +549,13 @@ void mode1() {
   dig3 = wheel[1][0]; 
   dig4 = wheel[0][0]; 
 
-  if (behavior != 2) { 
+  if (behavior != 2) { // Enigma M4
     if (wheel[3][0] == 1 ) { 
       dig1 = 1;
     } else {
       dig1 = 6;
     }
-  } else { 
+  } else { // Enigma M3
     dig1 = 36;
   } 
 
@@ -586,19 +590,19 @@ void mode2() {
     }
     if (keyval == 47) {
       wheel[2][1]++; 
-      if(wheel[2][1] > 25) {
+      if (wheel[2][1] > 25) {
         wheel[2][1] = 0;
       }
     }
     if (keyval == 48) {
       wheel[1][1]++; 
-      if(wheel[1][1] > 25) {
+      if (wheel[1][1] > 25) {
         wheel[1][1] = 0;
       }
     }
     if (keyval == 49) {
       wheel[0][1]++; 
-      if(wheel[0][1] > 25) {
+      if (wheel[0][1] > 25) {
         wheel[0][1] = 0;
       }
     }
@@ -657,14 +661,14 @@ void mode2() {
 void mode3() {
   digitalWrite(LED3, HIGH);
   if (windex == true) {
-    if(behavior != 2) { 
-      if(keyval == 46) {
+    if (behavior != 2) { 
+      if (keyval == 46) {
         wheel[3][2]++; 
         if (wheel[3][2] > 25) {
           wheel[3][2] = 0;
         }
       }
-    }    // {reflect[1]++; if(reflect[1] > 25) {reflect[1] = 0;}}}
+    }    // {reflect[1]++; if (reflect[1] > 25) {reflect[1] = 0;}}}
     if (keyval == 47) {
       wheel[2][2]++; 
       if (wheel[2][2] > 25) {
@@ -686,26 +690,26 @@ void mode3() {
     if (behavior != 2) {
       if (keyval == 43) {
         wheel[3][2]--; 
-        if(wheel[3][2] < 0) {
+        if (wheel[3][2] < 0) {
           wheel[3][2] = 25;
         }
       }
-    }    // {reflect[1]--; if(reflect[1] < 0) {reflect[1] = 25;}}}
+    }    // {reflect[1]--; if (reflect[1] < 0) {reflect[1] = 25;}}}
     if (keyval == 42) {
       wheel[2][2]--; 
-      if(wheel[2][2] < 0) {
+      if (wheel[2][2] < 0) {
         wheel[2][2] = 25;
       }
     }
     if (keyval == 41) {
       wheel[1][2]--; 
-      if(wheel[1][2] < 0) {
+      if (wheel[1][2] < 0) {
         wheel[1][2] = 25;
       }
     }
     if (keyval == 40) {
       wheel[0][2]--; 
-      if(wheel[0][2] < 0) {
+      if (wheel[0][2] < 0) {
         wheel[0][2] = 25;
       }
     }
@@ -733,7 +737,7 @@ void mode3() {
  * Define the Plugboard pairs  
  */
 void mode4() {
-  if(!plugread) {readplugs(); }
+  if (!plugread) {readplugs(); }
   int index = 0;
   digitalWrite(LED4, HIGH);
 
@@ -768,19 +772,19 @@ void mode4() {
       }
       if (keyval == 49) { 
         for (index = pbindex;(index == pbindex) || (index == paindex) || (plugval[0][index] == 1); index++) {
-          if(index > 24) {index = -1;}
+          if (index > 24) {index = -1;}
         } 
         pbindex = index; 
         windex = false; 
       }
       if (keyval == 40) { 
         for( index = pbindex;(index == pbindex) || (index == paindex) || (plugval[0][index] == 1); index--) {
-          if(index < 1) {index = 26;}
+          if (index < 1) {index = 26;}
         } 
         pbindex = index; 
         windex = false;  
       }
-      if(keyval == 44) { 
+      if (keyval == 44) { 
         plugval[0][paindex] = 1; 
         plugval[1][paindex] = pbindex; 
         plugval[0][pbindex] = 1; 
@@ -860,17 +864,17 @@ void mode5() {
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
-    if(procesval > 25) {procesval = procesval - 26;}
+    if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[3] = CHARS[procesval];}
   
     // Thin rotor
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
-    if(pv < 0) {pv = pv + 26;}
+    if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALS[wheel[3][0] +7][pv]; 
-    if(procesval >= 100) {procesval = procesval - 100;}
+    if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
-    if(procesval < 0) {procesval = procesval + 26;}
-    if(procesval > 25) {procesval = procesval - 26;}
+    if (procesval < 0) {procesval = procesval + 26;}
+    if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[4] = CHARS[procesval];}
   
     // Reflector
@@ -923,8 +927,8 @@ void mode5() {
     if (windexb == 1) {
       Serial3.write(procesval + 65);
       prindex ++;
-      if(prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
-      if(prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
+      if (prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
+      if (prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
     }
     lampval = procesval;
   }
@@ -953,7 +957,7 @@ void mode5() {
  * Helper Function to light the proper key 
  */
 void lampita() {
-  if(lampval <= 25) {
+  if (lampval <= 25) {
   digitalWrite(LAMPARRAY[lampval][0],0);
   digitalWrite(LAMPARRAY[lampval][1],0);
   delay(1);
@@ -964,14 +968,14 @@ void lampita() {
  * 
  */
 void lampitb(){
-  if(lampval <= 25) {
+  if (lampval <= 25) {
     digitalWrite(LAMPARRAY[lampval][0],1);
     digitalWrite(LAMPARRAY[lampval][1],1);  
   }
 }
 
 /** 
- *  Send characters to the four 16-SEGMENTPINS LED's
+ *  Send characters to the four 16-segment LED's
  */
 void nixisend() {
   sixteenSegWrite(0, dig1);
@@ -981,11 +985,11 @@ void nixisend() {
 }
 
 /**
- const * Display the marquee text defined in the MARQUEETEXT[] array on the LED segments
+ * Display the marquee text defined in the MARQUEETEXT[] array on the LED segments
  */             
 void marquee()              {  
   time = millis();
-  if( mtime < time) {
+  if ( mtime < time) {
     mtime = time + 400;
     mdex++;
   }
@@ -1044,19 +1048,19 @@ void indexwheels() {
   }
   if (ROTORVALS[wheel[0][0]-27][wheel[0][2]] >= 100) {windex1 = true;}
   wheel[0][2]++; 
-  if(wheel[0][2] > 25) {wheel[0][2] = 0;}
+  if (wheel[0][2] > 25) {wheel[0][2] = 0;}
   windex = false;
   if (windex1 == 1) {
     if (ROTORVALS[wheel[1][0]-27][wheel[1][2]] >= 100) {
       windex2 = true;
     }
     wheel[1][2]++; 
-    if(wheel[1][2] > 25) {wheel[1][2] = 0;}
+    if (wheel[1][2] > 25) {wheel[1][2] = 0;}
   }
   windex1 = false;
-  if(windex2 == 1){
+  if (windex2 == 1){
     wheel[2][2]++; 
-    if(wheel[2][2] > 25) {wheel[2][2] = 0;}
+    if (wheel[2][2] > 25) {wheel[2][2] = 0;}
     windex2 = false; 
   } 
 }
