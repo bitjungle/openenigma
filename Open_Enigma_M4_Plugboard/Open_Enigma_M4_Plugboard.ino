@@ -807,21 +807,26 @@ void mode4() {
 void mode5() {
   int pv = 0;
   digitalWrite(LED5, HIGH);
+  
+  char signalpath[10]; // Used for debugging and study of the internals of the Enigma
 
-  if (keyval >= 26) {
+  if (keyval >= 26) { // A function key has been pressed
     lampval = 100;
-  } else {
+  } else {            // A character key has been pressed
     int windexb = windex;
     if ((keyval >= 0) && (keyval <= 25)) {  
       if (windex == true) { 
         procesvala = keyval;  
         indexwheels();
       }
-    }    
+    }
+
+    // Character input
     procesval = procesvala;
     procesval = plugval[1][procesval];
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[0] = CHARS[procesval];}
   
+    // Fast rotor
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALS[wheel[0][0] -27][pv]; 
@@ -829,8 +834,9 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[1] = CHARS[procesval];}
   
+    // Middle rotor
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALS[wheel[1][0] -27][pv]; 
@@ -838,8 +844,9 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[2] = CHARS[procesval];}
   
+    // Slow rotor 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALS[wheel[2][0] -27][pv]; 
@@ -847,8 +854,9 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[3] = CHARS[procesval];}
   
+    // Thin rotor
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if(pv < 0) {pv = pv + 26;}
     procesval = ROTORVALS[wheel[3][0] +7][pv]; 
@@ -856,11 +864,13 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if(procesval < 0) {procesval = procesval + 26;}
     if(procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -||-> ");}
+    if (DEBUG) {signalpath[4] = CHARS[procesval];}
   
+    // Reflector
     procesval = ROTORVALS[reflect[0] + 9][procesval];
-    if (DEBUG) {Serial.print (CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[5] = CHARS[procesval];}
   
+    // Thin rotor return
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[3][0] +7][pv]; 
@@ -868,8 +878,9 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[6] = CHARS[procesval];}
 
+    // Slow rotor return
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[2][0] -27][pv]; 
@@ -877,8 +888,9 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[7] = CHARS[procesval];}
 
+    // Middle rotor return
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[1][0] -27][pv]; 
@@ -886,8 +898,9 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (DEBUG) {Serial.print(CHARS[procesval]); Serial.print(" -> ");}
+    if (DEBUG) {signalpath[8] = CHARS[procesval];}
   
+    // Fast rotor return
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[0][0] -27][pv]; 
@@ -895,14 +908,16 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}   
-    if (DEBUG) {Serial.println(CHARS[procesval]);}
+    if (DEBUG) {signalpath[9] = CHARS[procesval];}
    
+    if (DEBUG) {Serial.println(signalpath);}
+
     procesval = plugval[1][procesval];
-    if(windexb == 1) {
+    if (windexb == 1) {
       Serial3.write(procesval + 65);
       prindex ++;
-     if(prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
-     if(prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
+      if(prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
+      if(prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
     }
     lampval = procesval;
   }
