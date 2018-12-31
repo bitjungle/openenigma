@@ -31,7 +31,6 @@ unsigned long time = millis();// Number of milliseconds since start
 unsigned long otime = time;   // Used in keyboard debounce code
 
 const int INPINS[4] = {A0, A1, A2, A3};
-int inval[4] = {0, 0, 0, 0};
 
 int keyval = 100; // currently pressed key value
 int kvalo = 100;  // last read key value
@@ -269,7 +268,7 @@ int reflect[2] = {1,0};
 
 // Define Array for plugbord values 25 x2  
 // position 0 holds use -  position 1 holds value 
-int plugval [2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+int plugval[2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                               {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
 int pluguse = 0; // holds the total nomber of plugs used (10 max)
 
@@ -365,10 +364,13 @@ void loop() {
  * @return int A unique integer for the key pressed
  */
 int readkbde() {
+  int inval[4] = {0, 0, 0, 0};
   int kval = 100;
+
   for (int index = 0; index <= 3; index++) { //Read analog input values
     inval[index] = analogRead(INPINS[index]);   
    } 
+
   if ((inval[0] > 982) && (inval[1] > 973) && (inval[2] > 966) && (inval[3] > 973))  {kval = 100;} // no key press
   else if ((inval[0] < 981) && (inval[0] > 903)) {kval = 49;} //up arrow 4
   else if ((inval[0] < 902) && (inval[0] > 831)) {kval = 48;} //up arrow 3
@@ -407,10 +409,11 @@ int readkbde() {
   else if ((inval[3] < 260) && (inval[3] > 94)) {kval = 12;}
   else if (inval[3] < 93 ) {kval = 11;}
   else {kval = 100;}
+
   if (kval < 99) {otime = millis();}
-  
   //Starts key debounce timer
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  
+
   // for debugging, prints keybord value to serial monitor
   if (debug && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
   if (debug && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
