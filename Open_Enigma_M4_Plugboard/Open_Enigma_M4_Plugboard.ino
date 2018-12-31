@@ -919,7 +919,7 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[9] = CHARS[procesval];}
+    if (debug) {signalpath[9] = CHARS[procesval]; signalpath[10] = '\0';}
    
     if (debug) {Serial.println(signalpath);}
 
