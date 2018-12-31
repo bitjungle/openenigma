@@ -402,8 +402,8 @@ int readkbde() {
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  
 
   // for debugging, prints keybord value to serial monitor
-  if (debug && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
-  if (debug && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
+  if (debug && kval != kvalo && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
+  if (debug && kval != kvalo && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
   return kval;
 }
 
@@ -805,6 +805,7 @@ void mode4() {
 void mode5() {
   int pv = 0;
   digitalWrite(LED5, HIGH);
+  boolean printsignalpath = false;
   
   char signalpath[11]; // Used for debugging and study of the internals of the Enigma
 
@@ -813,6 +814,7 @@ void mode5() {
   } else {            // A character key has been pressed
     if ((keyval >= 0) && (keyval <= 25)) {  
       if (windex) { 
+        printsignalpath = true;
         procesvala = keyval;  
         indexwheels();
       }
@@ -907,7 +909,7 @@ void mode5() {
     if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[9] = CHARS[procesval]; signalpath[10] = '\0';}
    
-    if (debug) {Serial.println(signalpath);}
+    if (debug && printsignalpath) {Serial.print("mode5() : "); Serial.println(signalpath);}
 
     procesval = plugval[1][procesval];
     lampval = procesval;
