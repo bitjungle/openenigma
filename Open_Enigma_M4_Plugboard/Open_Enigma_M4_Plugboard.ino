@@ -299,24 +299,11 @@ void setup() {
   for (int index = 0 ; index <= 25; index++) {
     pinMode(PLUGPINS[index], INPUT);
   }
+
+  // Start serial communication
   Serial.begin(9600);
-  Serial3.begin(19200);
-  delay(500);
-  Serial3.write(29);
-  Serial3.write(33);
-  Serial3.write(0);
-  Serial3.println("");
-  Serial3.print("  S&T GeoTronics ENIGMA MARK 5 ");
-  Serial3.println("");
-  Serial3.println("");
-  Serial3.println("");
-//  Serial3.write(27);
-//  Serial3.write(14);
-  Serial3.write(29);
-  Serial3.write(33);
-  Serial3.write(17);
-  
-// Initialize all 4 pushbutton pins as Input    
+
+  // Initialize all 4 pushbutton pins as Input    
   for (int index = 0; index <= 3; index++) {
     pinMode(INPINS[index], INPUT);
   }
@@ -824,7 +811,6 @@ void mode5() {
   if (keyval >= 26) { // A function key has been pressed
     lampval = 100;
   } else {            // A character key has been pressed
-    boolean windexb = windex;
     if ((keyval >= 0) && (keyval <= 25)) {  
       if (windex) { 
         procesvala = keyval;  
@@ -924,14 +910,6 @@ void mode5() {
     if (debug) {Serial.println(signalpath);}
 
     procesval = plugval[1][procesval];
-    if (windexb) {
-      static int prindex = 0;
-      static int prtindex = 0;
-      Serial3.write(procesval + 65);
-      prindex++;
-      if (prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
-      if (prtindex > 2) {Serial3.println(""); Serial3.println(""); prtindex = 0;}
-    }
     lampval = procesval;
   }
   windex = false;
