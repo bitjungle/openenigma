@@ -16,7 +16,7 @@
  *   - Designed, assembled & programmed by Marc Tessier & James Sanderson 9/20/13
  *   - Modified for our Prototype PCB pair on 12/4/13.
  *   - Modified to obey doublesteping and have M3 function 22 MAR 14
- *   - Code formatting and documentation + debug to serial - bitjungle 2018-12-30
+ *   - Code formatting, cleanup and documentation + debug to serial - bitjungle 2018-12-31
  *
  *   This code shall remain in public domain as regulated under the creative commons licence.
  */
@@ -27,9 +27,8 @@ boolean debug = false; // Change to behavior=1 in mode 0 to enable (key 46)
 const int NUMCHARS = 26;    // Number of characters available on the Enigma
 const char CHARS[NUMCHARS+1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Including NULL 
 
-unsigned long time = millis();// number of milliseconds since start
+unsigned long time = millis();// Number of milliseconds since start
 unsigned long otime = time;   // Used in keyboard debounce code
-unsigned long mtime;          // Used for scrolling the marquee text
 
 const int INPINS[4] = {A0, A1, A2, A3};
 int inval[4] = {0, 0, 0, 0};
@@ -38,8 +37,6 @@ int keyval = 100; // currently pressed key value
 int kvalo = 100;  // last read key value
 
 boolean windex = false; // windex showing true indicates the return of a fresh key stroke
-boolean windex1 = false;
-boolean windex2 = false;
 
 int lampval = 100;
 int procesval = 0;
@@ -55,7 +52,7 @@ boolean plugread = false; // Toggle after plogboard has been read
 // Define Plug Board Pins
 const int PLUGPINS[NUMCHARS] = {A14,49,A12,A15,7,53,50,52,3,A6,A4,A11,A9,A10,8,A7,6,4,51,10,9,A5,5,A8,A13,2} ;
 
-// Define each Nixie character
+// Define each sixteen-segment display character
 int dig1 = 37;
 int dig2 = 37;
 int dig3 = 37;
@@ -66,7 +63,7 @@ const int MARQUEETEXT[3][MARQUEEMAXCHARS] ={{36,4,13,8,6,12,0,36,12,30,36,36,36,
                                             {36,4,13,8,6,12,0,36,12,30,36,3,1,6,36},    //Enigma M4 DBG
                                             {36,4,13,8,6,12,0,36,12,29,36,36,36,36,36}};//Enigma M3
 
-// Define the 16-Segment LED Pins as 2 Arrays
+// Define the sixteen-segment display LED Pins as 2 Arrays
 const int SEGMENTPINS[17] = {24,22,25,31,38,36,32,30,28,26,23,27,33,35,34,29,37}; //cathode array
 const int ANODEPINS[4] = {39,41,43,45}; //anode array common anode
 
@@ -266,6 +263,7 @@ int wheel[4][3] = {{29,0,0},
                    {28,0,0},
                    {27,0,0},
                    {1,0,0}};
+
 //
 int reflect[2] = {1,0};
 
@@ -274,16 +272,12 @@ int reflect[2] = {1,0};
 int plugval [2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                               {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
 int pluguse = 0; // holds the total nomber of plugs used (10 max)
-int paindex = 0; 
-int pbindex = 1;
-int prindex = 0;
-int prtindex = 0;
 
 /**
  * Configure Arduino pins and start serial communication
  */
 void setup() {
-// Initialize all 29 LED pins as Output  
+  // Initialize all 29 LED pins as Output  
   for (int index = 0; index <= 2; index++) {
   pinMode(LAMPPINS[index], OUTPUT);
   digitalWrite(LAMPPINS[index],1);
@@ -737,6 +731,9 @@ void mode3() {
  * Define the Plugboard pairs  
  */
 void mode4() {
+  static int paindex = 0; 
+  static int pbindex = 1;
+
   if (!plugread) {readplugs(); }
   int index = 0;
   digitalWrite(LED4, HIGH);
@@ -925,6 +922,8 @@ void mode5() {
 
     procesval = plugval[1][procesval];
     if (windexb) {
+      static int prindex = 0;
+      static int prtindex = 0;
       Serial3.write(procesval + 65);
       prindex++;
       if (prindex > 3) {Serial3.print(" "); prtindex ++; prindex = 0; }
@@ -975,7 +974,7 @@ void lampitb(){
 }
 
 /** 
- *  Send characters to the four 16-segment LED's
+ *  Send characters to the four sixteen-segment displays
  */
 void nixisend() {
   sixteenSegWrite(0, dig1);
@@ -987,7 +986,8 @@ void nixisend() {
 /**
  * Display the marquee text defined in the MARQUEETEXT[] array on the LED segments
  */             
-void marquee()              {  
+void marquee() {
+  static unsigned long mtime;  
   time = millis();
   if ( mtime < time) {
     mtime = time + 400;
@@ -1002,7 +1002,8 @@ void marquee()              {
 }
 
 /**
- * Function that actually turns on each of 17 appropriate segments on each 16-SEGMENTPINS LED
+ * Function that actually turns on each of 17 appropriate segments 
+ * on each of the sixteen-segment displays
  * @param int digit
  * @param int character
  */
@@ -1032,6 +1033,9 @@ void done() {
  * 
  */   
 void indexwheels() {
+  static boolean windex1 = false;
+  static boolean windex2 = false;
+
   if (behavior > 0) { 
     if (ROTORVALS[wheel[1][0]-27][wheel[1][2]] >= 100) {
       windex1 = true;
@@ -1050,7 +1054,7 @@ void indexwheels() {
   wheel[0][2]++; 
   if (wheel[0][2] > 25) {wheel[0][2] = 0;}
   windex = false;
-  if (windex1 == 1) {
+  if (windex1) {
     if (ROTORVALS[wheel[1][0]-27][wheel[1][2]] >= 100) {
       windex2 = true;
     }
@@ -1058,7 +1062,7 @@ void indexwheels() {
     if (wheel[1][2] > 25) {wheel[1][2] = 0;}
   }
   windex1 = false;
-  if (windex2 == 1){
+  if (windex2){
     wheel[2][2]++; 
     if (wheel[2][2] > 25) {wheel[2][2] = 0;}
     windex2 = false; 
