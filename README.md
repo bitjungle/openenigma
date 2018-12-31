@@ -10,15 +10,14 @@ buttons and 10 function keys.
 
 ## Installation Instructions
 
-Download the Arduino source code for [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino). Connect your Enigma Mark 4 to your 
-computer via USB, and upload the code to the Arduino Mega using the [Arduino IDE]
-(https://www.arduino.cc/en/Main/Software).
+Download the Arduino [source code for S&T GeoTronics Enigma Mark 4 IP Kit Plugged](Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino). Connect your Enigma Mark 4 to your 
+computer via USB, and upload the code to the Arduino Mega using the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 
 ## Operation Instructions
 
 To understand how to operate the S&T GeoTronics M4 Enigma, please refer to the following guide:
 
- - **[BJ Gleason - Open Enigma for Dummies](docs/BJ%20Gleason%20-%20Open%20Engima%20for%20Dummies.pdf)**
+ - **[BJ Gleason - Open Enigma for Dummies](docs/BJ Gleason - Open Enigma for Dummies.pdf)**
 
 See the source code for additional documentation.
 
@@ -27,4 +26,4 @@ See the source code for additional documentation.
  - Designed, assembled & programmed by Marc Tessier & James Sanderson 2013-09-20
  - Modified for Prototype PCB pair on 2013-12-04
  - Modified to obey doublesteping and have M3 function 2014-03-22
- - - Code formatting, cleanup and documentation + debug to serial - bitjungle 2018-12-31
+ - Code formatting, cleanup and documentation + debug to serial - bitjungle 2018-12-31
