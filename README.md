@@ -2,16 +2,17 @@
 
 [![Banner](docs/banner.jpg)](https://www.instructables.com/id/Make-your-own-Enigma-Replica/)
 
-This repository contains the Arduino code for the [S&T GeoTronics M4 Enigma](https://www.instructables.com/id/Make-your-own-Enigma-Replica/).
-The S&T GeoTronics M4 Enigma is an Arduino Mega custom shield programmed to replicate the behavior of a [German M4 Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine).
-It consistes of 4 16-Segment units, 5 LEDs, 26 Lamps setup as keyboard, 26 keyboard buttons & 10 Function keys. The 115 light emitting diodes are multi-plexed. This minimizes the amount of pins needed to control them down to 38 pins and all 36 pushbuttons keys are sharing a total of 4 pins.
+This repository contains the Arduino code for the [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](https://www.stgeotronics.com/Enigma-Mark-4-IP-Kit-Plugged-KIT-Enigma-Plugged.htm). The S&T 
+GeoTronics Enigma Mark 4 contains an Arduino Mega custom shield programmed to replicate the 
+behavior of a [German Enigma machine M4](https://en.wikipedia.org/wiki/Enigma_machine). It 
+consistes of 4 sixteen-segment display units, 5 LEDs, 26 lamps setup as keyboard, 26 keyboard 
+buttons and 10 function keys. 
 
 ## Installation Instructions
 
-Depending on your type of kit, you need to install the relevant version of the code onto the Arduino:
-
- - **[Open Enigma M4](Open%20Enigma%20M4.ino)**
- - **[Open Enigma M4 with Plugboard](Open%20Enigma%20M4%20Plugboard.ino)**
+Download the Arduino source code for [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino). Connect your Enigma Mark 4 to your 
+computer via USB, and upload the code to the Arduino Mega using the [Arduino IDE]
+(https://www.arduino.cc/en/Main/Software).
 
 ## Operation Instructions
 
@@ -19,8 +20,11 @@ To understand how to operate the S&T GeoTronics M4 Enigma, please refer to the f
 
  - **[BJ Gleason - Open Enigma for Dummies](docs/BJ%20Gleason%20-%20Open%20Engima%20for%20Dummies.pdf)**
 
+See the source code for additional documentation.
+
 ## Release Notes
 
- - Designed, assembled & programmed by Marc Tessier & James Sanderson 20/9/13.
- - Modified for Prototype PCB pair on 4/12/13.
- - Modified to obey doublesteping and have M3 function 22/3/14.
+ - Designed, assembled & programmed by Marc Tessier & James Sanderson 2013-09-20
+ - Modified for Prototype PCB pair on 2013-12-04
+ - Modified to obey doublesteping and have M3 function 2014-03-22
+ - - Code formatting, cleanup and documentation + debug to serial - bitjungle 2018-12-31
