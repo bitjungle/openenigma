@@ -8,9 +8,9 @@
  *   misuse of this code or any associated hardware provided.
  *   
  *   Enigma Code. This Arduino Mega custom shield is programmed to replicate
- *   exactly the behavior of a true German M4 Enigma machine.
- *   It uses 4 16-Segment units, 5 LEDs, 26 Lamps setup as keyboard, 26 keyboard buttons
- *   & 10 Function keys. The 115 light emitting diodes are multi-plexed to minimize the 
+ *   exactly the behavior of a true German Enigma M4 machine.
+ *   It uses 4 sixteen-segment units, 5 LEDs, 26 lamps setup as keyboard, 26 keyboard buttons
+ *   & 10 function keys. The 115 light emitting diodes are multi-plexed to minimize the 
  *   amount of pins needed down to 38 and all 36 pushbuttons keys are sharing a total of 4 pins.
  * 
  *   - Designed, assembled & programmed by Marc Tessier & James Sanderson 9/20/13
@@ -66,7 +66,10 @@ const int MARQUEETEXT[3][MARQUEEMAXCHARS] ={{36,4,13,8,6,12,0,36,12,30,36,36,36,
 const int SEGMENTPINS[17] = {24,22,25,31,38,36,32,30,28,26,23,27,33,35,34,29,37}; //cathode array
 const int ANODEPINS[4] = {39,41,43,45}; //anode array common anode
 
-// Define the 26 Lamps as a 2D Array 
+// Define the three common anode pins for the lamp array
+const int LAMPPINS[3] = {11,12,13};
+
+// Define the 26 Lamps as a 2D Array {anode,cathode}
 const int LAMPARRAY[NUMCHARS][2] = {{12,38}, // A
                                     {13,29}, // B
                                     {13,33}, // C
@@ -93,10 +96,6 @@ const int LAMPARRAY[NUMCHARS][2] = {{12,38}, // A
                                     {13,35}, // X
                                     {13,37}, // Y
                                     {11,29}};// Z
-
-//  Define the 12 Lamp Pins for initialization
-//int LAMPPINS[12] = {2,3,4,5,6,7,8,9,10,11,12,13}; //2 to 10 cathode, 11 to 13 common anode
-const int LAMPPINS[3] = {11,12,13};
 
  // Define each LTP587P Segments: A,B,C,D,E,F,G,H,K,M,N,P,R,S,T,U,dp               
 const boolean SEGMENTVALS[40][17] = { { 0,0,0,0,1,1,0,0,1,1,1,0,1,1,1,0,1 },  // = A 0
@@ -141,13 +140,18 @@ const boolean SEGMENTVALS[40][17] = { { 0,0,0,0,1,1,0,0,1,1,1,0,1,1,1,0,1 },  //
                                       { 0,1,1,1,0,0,0,1,0,0,1,1,0,1,1,0,1} }; // = & 39
 
 // Define the 5 Mode LEDs 
-const int LED1 = 40;
-const int LED2 = 42;
-const int LED3 = 44;
-const int LED4 = 46;
-const int LED5 = 48;
+const int LED1 = 40; // Mode 1: Rotors
+const int LED2 = 42; // Mode 2: Inrings
+const int LED3 = 44; // Mode 3: Outrings
+const int LED4 = 46; // Mode 4: Plugs
+const int LED5 = 48; // Mode 5: Run
 
 // ENIGMA M4 WHEEL WIRING - https://cryptomuseum.com/crypto/enigma/wiring.htm#6 
+// The wiring of the first five wheels are identical on Enigma I, M3 and M4.
+// The Enigma M4 came standard with thin reflector b and extra wheel β (Beta) 
+// fitted. They were wired in such a way that together, with the β-wheel set 
+// to 'A', the combination behaved exactly like UKW-B in the Enigma M3 and 
+// Enigma I. This made the machine backwards compatible. 
 // =============================================================================
 // Wheel   ABCDEFGHIJKLMNOPQRSTUVWXYZ     Notch     Turnover     #
 // ---------------------------------------------------------------
@@ -269,7 +273,7 @@ int reflect[2] = {1,0};
 // Define Array for plugbord values 25 x2  
 // position 0 holds use -  position 1 holds value 
 int plugval[2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                              {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
+                            {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
 int pluguse = 0; // holds the total nomber of plugs used (10 max)
 
 /**
@@ -278,8 +282,8 @@ int pluguse = 0; // holds the total nomber of plugs used (10 max)
 void setup() {
   // Initialize all 29 LED pins as Output  
   for (int index = 0; index <= 2; index++) {
-  pinMode(LAMPPINS[index], OUTPUT);
-  digitalWrite(LAMPPINS[index],1);
+    pinMode(LAMPPINS[index], OUTPUT);
+    digitalWrite(LAMPPINS[index],1);
   }
   for (int index = 0; index <= 3; index++) {
     pinMode(ANODEPINS[index], OUTPUT);
@@ -322,6 +326,9 @@ void loop() {
 
   if ((mode == 0) && (keyval == 46) && (windex)) { 
     // Change behavior in mode 0 using key 46 (top left key)
+    // 0 : Enigma M4 without serial communication
+    // 1 : Enigma M4 with debug info over serial communication
+    // 2 : Enigma M3
     behavior++; 
     windex = false; 
     if (behavior == 1) {
@@ -543,7 +550,7 @@ void mode1() {
     dig1 = 36;
   } 
 
-  lampval = reflect[0];
+  lampval = reflect[0]; // Indicate selected reflector B/C in the lamp array
   lampita();
   delay(3);
   lampitb();
@@ -622,9 +629,9 @@ void mode2() {
   dig2 = wheel[2][1];  
   dig3 = wheel[1][1]; 
   dig4 = wheel[0][1]; 
-  if (behavior != 2) {
-    dig1 =wheel[3][1];
-  } else {
+  if (behavior != 2) { // Enigma M4
+    dig1 = wheel[3][1];
+  } else { // Enigma M3
     dig1 = 36;
   }
   
@@ -645,7 +652,7 @@ void mode2() {
 void mode3() {
   digitalWrite(LED3, HIGH);
   if (windex) {
-    if (behavior != 2) { 
+    if (behavior != 2) { // Enigma M4
       if (keyval == 46) {
         wheel[3][2]++; 
         if (wheel[3][2] > 25) {
@@ -671,7 +678,7 @@ void mode3() {
         wheel[0][2] = 0;
       }
     }
-    if (behavior != 2) {
+    if (behavior != 2) { // Enigma M4
       if (keyval == 43) {
         wheel[3][2]--; 
         if (wheel[3][2] < 0) {
@@ -704,7 +711,7 @@ void mode3() {
   dig3 = wheel[1][2]; 
   dig4 = wheel[0][2]; 
   dig1 = wheel[3][2];
-  if (behavior == 2) {dig1 = 36;}
+  if (behavior == 2) {dig1 = 36;} // Enigma M3
   
   nixisend();
   
@@ -865,11 +872,11 @@ void mode5() {
     if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[4] = CHARS[procesval];}
   
-    // Reflector
+    // Reflector UKW-B [9] or UKW-C [10] 
     procesval = ROTORVALS[reflect[0] + 9][procesval];
     if (debug) {signalpath[5] = CHARS[procesval];}
   
-    // Thin rotor return
+    // Thin rotor inverted (return)
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[3][0] +7][pv]; 
@@ -879,7 +886,7 @@ void mode5() {
     if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[6] = CHARS[procesval];}
 
-    // Slow rotor return
+    // Slow rotor inverted (return)
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[2][0] -27][pv]; 
@@ -889,7 +896,7 @@ void mode5() {
     if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[7] = CHARS[procesval];}
 
-    // Middle rotor return
+    // Middle rotor inverted (return)
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[1][0] -27][pv]; 
@@ -899,7 +906,7 @@ void mode5() {
     if (procesval > 25) {procesval = procesval - 26;}
     if (debug) {signalpath[8] = CHARS[procesval];}
   
-    // Fast rotor return
+    // Fast rotor inverted (return)
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
     procesval = ROTORVALSI[wheel[0][0] -27][pv]; 
@@ -914,12 +921,15 @@ void mode5() {
     procesval = plugval[1][procesval];
     lampval = procesval;
   }
+
   windex = false;
-  dig2 = wheel[2][2];  
-  dig3 = wheel[1][2]; 
+
+  // Updating displayed wheel positions
   dig4 = wheel[0][2]; 
+  dig3 = wheel[1][2]; 
+  dig2 = wheel[2][2];  
   dig1 = wheel[3][2];
-  if (behavior == 2) {dig1 = 36;}
+  if (behavior == 2) {dig1 = 36;} // Enigma M3
   
   lampita();
   delay(3);
