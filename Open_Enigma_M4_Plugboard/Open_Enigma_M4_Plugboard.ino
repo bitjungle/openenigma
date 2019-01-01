@@ -270,8 +270,8 @@ int wheel[4][3] = {{29,0,0},
 //
 int reflect[2] = {1,0};
 
-// Define Array for plugbord values 25 x2  
-// position 0 holds use -  position 1 holds value 
+// Define Array for plugbord values 25x2  
+// position 0 holds use -  position 1 holds value
 int plugval[2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
 int pluguse = 0; // holds the total nomber of plugs used (10 max)
@@ -814,11 +814,11 @@ void mode5() {
   digitalWrite(LED5, HIGH);
   boolean printsignalpath = false;
   
-  char signalpath[11]; // Used for debugging and study of the internals of the Enigma
+  char signalpath[13]; // Used for debugging and study of the internals of the Enigma
 
-  if (keyval >= 26) { // A function key has been pressed
+  if (keyval >= 26) {  // A function key has been pressed
     lampval = 100;
-  } else {            // A character key has been pressed
+  } else {             // A character key has been pressed
     if ((keyval >= 0) && (keyval <= 25)) {  
       if (windex) { 
         printsignalpath = true;
@@ -829,8 +829,11 @@ void mode5() {
 
     // Character input
     procesval = procesvala;
-    procesval = plugval[1][procesval];
     if (debug) {signalpath[0] = CHARS[procesval];}
+
+    // Plugboard
+    procesval = plugval[1][procesval];
+    if (debug) {signalpath[1] = CHARS[procesval];}
   
     // Fast rotor
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
@@ -840,7 +843,7 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[1] = CHARS[procesval];}
+    if (debug) {signalpath[2] = CHARS[procesval];}
   
     // Middle rotor
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
@@ -850,7 +853,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[2] = CHARS[procesval];}
+    if (debug) {signalpath[3] = CHARS[procesval];}
   
     // Slow rotor 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
@@ -860,7 +863,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[3] = CHARS[procesval];}
+    if (debug) {signalpath[4] = CHARS[procesval];}
   
     // Thin rotor
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
@@ -870,11 +873,11 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[4] = CHARS[procesval];}
+    if (debug) {signalpath[5] = CHARS[procesval];}
   
     // Reflector UKW-B [9] or UKW-C [10] 
     procesval = ROTORVALS[reflect[0] + 9][procesval];
-    if (debug) {signalpath[5] = CHARS[procesval];}
+    if (debug) {signalpath[6] = CHARS[procesval];}
   
     // Thin rotor inverted (return)
     pv = (procesval + (wheel[3][2] - wheel[3][1]));
@@ -884,7 +887,7 @@ void mode5() {
     procesval = (procesval - (wheel[3][2] - wheel[3][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[6] = CHARS[procesval];}
+    if (debug) {signalpath[7] = CHARS[procesval];}
 
     // Slow rotor inverted (return)
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
@@ -894,7 +897,7 @@ void mode5() {
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[7] = CHARS[procesval];}
+    if (debug) {signalpath[8] = CHARS[procesval];}
 
     // Middle rotor inverted (return)
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
@@ -904,7 +907,7 @@ void mode5() {
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[8] = CHARS[procesval];}
+    if (debug) {signalpath[9] = CHARS[procesval];}
   
     // Fast rotor inverted (return)
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
@@ -914,11 +917,14 @@ void mode5() {
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
     if (procesval > 25) {procesval = procesval - 26;}
-    if (debug) {signalpath[9] = CHARS[procesval]; signalpath[10] = '\0';}
-   
-    if (debug && printsignalpath) {Serial.print("mode5() : "); Serial.println(signalpath);}
+    if (debug) {signalpath[10] = CHARS[procesval];}
 
+    // Plugboard
     procesval = plugval[1][procesval];
+
+    if (debug) {signalpath[11] = CHARS[procesval]; signalpath[12] = '\0';}   
+    if (debug && printsignalpath) {Serial.print("mode5() : "); Serial.println(signalpath);}
+    
     lampval = procesval;
   }
 
