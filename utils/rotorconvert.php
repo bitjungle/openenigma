@@ -44,18 +44,21 @@ function wheel_wiring_form($input = '', $index_start = '0', $turnover = '') {
 function wheel_char_to_num($wheel_chars, $index_start = '0', $turnover = '') {
     $corr = 97;
     if ($index_start != '0') $corr = 96;
-    $turnover_pos = -1;
+    $turnover_pos = array();
     if ($turnover != '') {
-        $turnover_pos = ord(strtolower($turnover)) - 97;
+        $turnover_len = strlen($turnover);
+        for ($i = 0; $i < $turnover_len; $i++) {
+            $turnover_pos[$i] = ord(strtolower($turnover[$i])) - 97;
+        }
     }
     $len = strlen($wheel_chars);
     if ($len != 26) return 'Wiring string must be 26 exactly characters long';
     $out = '';
-    for($i = 0; $i < $len; $i++) {
+    for ($i = 0; $i < $len; $i++) {
         $pos = ord(strtolower($wheel_chars[$i]));
         if ($pos < 97 || $pos > 123) {
             return 'Invalid character in wiring string';
-        } elseif ($i == $turnover_pos) {
+        } elseif (in_array($i, $turnover_pos)) {
             $out .= $pos - $corr + 100;
         } else {
             $out .= $pos - $corr;
@@ -68,11 +71,12 @@ function wheel_char_to_num($wheel_chars, $index_start = '0', $turnover = '') {
 function page_header() {
     $out = "<h1>Convert Enigma wheel wiring characters to number array</h1>\n"; 
     $out .= "<p>This tool converts Enigma wheel wiring string arrays to comma 
-            separated integer arrays, from <code>A = 0/1</code> to <code>Z = 25/26</code>.</p>\n";
+            separated integer arrays, from <code>A = 0/1</code> to <code>Z = 25/26</code>.
+            These integer arrays are e.g. used in the software implementation of the Open Enigma.</p>\n";
     $out .= "<p>See <a href=\"https://www.cryptomuseum.com/crypto/enigma/wiring.htm\">
             this page on Crypto Museum</a> for wiring string arrays.</p>\n";
-    $out .= "<p>If you enter a turnover character in the form below, 100 will be added to the 
-             corresponding turnover character.</p>";
+    $out .= "<p>If you enter a turnover character in the form below, a value of 100 will be added to the 
+             corresponding wheel position.</p>";
     $out .= "<hr/>";
     return $out;
 }
