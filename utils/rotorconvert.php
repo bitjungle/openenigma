@@ -23,7 +23,7 @@
 * SOFTWARE.
 */
 
-function wheel_wiring_form($input = '', $index_start = '0') {
+function wheel_wiring_form($input = '', $index_start = '0', $turnover = '') {
     $selected_zero = '';
     $selected_one = '';
     if ($index_start == '0') {
@@ -35,14 +35,19 @@ function wheel_wiring_form($input = '', $index_start = '0') {
     $form .= "Enter wiring string: <input type=\"text\" name=\"wheel_wiring\" placeholder=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\" value=\"{$input}\" size=\"40\"><br/>\n";
     $form .= "Start index at: <input type=\"radio\" name=\"index_start\" value=\"0\" {$selected_zero}> 0 ";
     $form .= "<input type=\"radio\" name=\"index_start\" value=\"1\" {$selected_one}> 1 <br>\n";
+    $form .= "Turnover: <input type=\"text\" name=\"wheel_turnover\" value=\"{$turnover}\" size=\"4\"><br/>\n";
     $form .= "<input type=\"submit\" value=\"Send\">\n";
     $form .= "</form>\n";
     return $form;
 }
 
-function wheel_char_to_num($wheel_chars, $index_start = '0') {
+function wheel_char_to_num($wheel_chars, $index_start = '0', $turnover = '') {
     $corr = 97;
     if ($index_start != '0') $corr = 96;
+    $turnover_pos = -1;
+    if ($turnover != '') {
+        $turnover_pos = ord(strtolower($turnover)) - 97;
+    }
     $len = strlen($wheel_chars);
     if ($len != 26) return 'Wiring string must be 26 exactly characters long';
     $out = '';
@@ -50,6 +55,8 @@ function wheel_char_to_num($wheel_chars, $index_start = '0') {
         $pos = ord(strtolower($wheel_chars[$i]));
         if ($pos < 97 || $pos > 123) {
             return 'Invalid character in wiring string';
+        } elseif ($i == $turnover_pos) {
+            $out .= $pos - $corr + 100;
         } else {
             $out .= $pos - $corr;
         }
@@ -64,15 +71,18 @@ function page_header() {
             separated integer arrays, from <code>A = 0/1</code> to <code>Z = 25/26</code>.</p>\n";
     $out .= "<p>See <a href=\"https://www.cryptomuseum.com/crypto/enigma/wiring.htm\">
             this page on Crypto Museum</a> for wiring string arrays.</p>\n";
+    $out .= "<p>If you enter a turnover character in the form below, 100 will be added to the 
+             corresponding turnover character.</p>";
+    $out .= "<hr/>";
     return $out;
 }
 
 $output = page_header();
 
 if (isset($_POST['wheel_wiring'])) {
-    $output .= wheel_wiring_form($_POST['wheel_wiring'], $_POST['index_start']);
-    $output .= "<textarea rows=\"1\" cols=\"80\">\n";
-    $output .= wheel_char_to_num($_POST['wheel_wiring'], $_POST['index_start']);
+    $output .= wheel_wiring_form($_POST['wheel_wiring'], $_POST['index_start'], $_POST['wheel_turnover']);
+    $output .= "<hr/>\n<p>Result:</p>\n<textarea rows=\"1\" cols=\"80\">\n";
+    $output .= wheel_char_to_num($_POST['wheel_wiring'], $_POST['index_start'], $_POST['wheel_turnover']);
     $output .= "\n</textarea>\n";
 } else {
     $output .= wheel_wiring_form();
