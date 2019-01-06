@@ -170,43 +170,43 @@ const int LED5 = 48; // Mode 5: Run
 // UKW-C   RDOBJNTKVEHMLFCWZAXGYIPSUQ            
 const int ROTORVALS[12][78] = { { 4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,123,20,18,15,0,8,1,17,2,9,
                                   4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,123,20,18,15,0,8,1,17,2,9,
-                                  4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,123,20,18,15,0,8,1,17,2,9 }, // I
+                                  4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,123,20,18,15,0,8,1,17,2,9 }, // I (indexwheel 27)
 
                                 { 0,9,3,10,118,8,17,20,23,1,11,7,22,19,12,2,16,6,25,13,15,24,5,21,14,4,
                                   0,9,3,10,118,8,17,20,23,1,11,7,22,19,12,2,16,6,25,13,15,24,5,21,14,4,
-                                  0,9,3,10,118,8,17,20,23,1,11,7,22,19,12,2,16,6,25,13,15,24,5,21,14,4 }, // II
+                                  0,9,3,10,118,8,17,20,23,1,11,7,22,19,12,2,16,6,25,13,15,24,5,21,14,4 }, // II  (indexwheel 28)
                                   
                                 { 1,3,5,7,9,11,2,15,17,19,23,21,25,13,24,4,8,22,6,0,10,112,20,18,16,14,
                                   1,3,5,7,9,11,2,15,17,19,23,21,25,13,24,4,8,22,6,0,10,112,20,18,16,14,
-                                  1,3,5,7,9,11,2,15,17,19,23,21,25,13,24,4,8,22,6,0,10,112,20,18,16,14 }, // III
+                                  1,3,5,7,9,11,2,15,17,19,23,21,25,13,24,4,8,22,6,0,10,112,20,18,16,14 }, // III (indexwheel 29)
                                   
                                 { 4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1,
                                   4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1,
-                                  4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1 }, // IV
+                                  4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1 }, // IV (indexwheel 30)
                                     
                                 { 21,25,1,17,6,8,19,24,20,15,18,3,13,7,11,23,0,22,12,9,16,14,5,4,2,110,
                                   21,25,1,17,6,8,19,24,20,15,18,3,13,7,11,23,0,22,12,9,16,14,5,4,2,110,
-                                  21,25,1,17,6,8,19,24,20,15,18,3,13,7,11,23,0,22,12,9,16,14,5,4,2,110  }, // V
+                                  21,25,1,17,6,8,19,24,20,15,18,3,13,7,11,23,0,22,12,9,16,14,5,4,2,110  }, // V (indexwheel 31)
                                   
                                 { 9,15,6,21,14,20,12,5,24,16,1,4,113,7,25,17,3,10,0,18,23,11,8,2,19,122,
                                   9,15,6,21,14,20,12,5,24,16,1,4,113,7,25,17,3,10,0,18,23,11,8,2,19,122,
-                                  9,15,6,21,14,20,12,5,24,16,1,4,113,7,25,17,3,10,0,18,23,11,8,2,19,122 }, // VI
+                                  9,15,6,21,14,20,12,5,24,16,1,4,113,7,25,17,3,10,0,18,23,11,8,2,19,122 }, // VI (indexwheel 32)
                                   
                                 { 13,25,9,7,6,17,2,23,12,24,18,22,101,14,20,5,0,8,21,11,15,4,10,16,3,119,
                                   13,25,9,7,6,17,2,23,12,24,18,22,101,14,20,5,0,8,21,11,15,4,10,16,3,119,
-                                  13,25,9,7,6,17,2,23,12,24,18,22,101,14,20,5,0,8,21,11,15,4,10,16,3,119 }, // VII
+                                  13,25,9,7,6,17,2,23,12,24,18,22,101,14,20,5,0,8,21,11,15,4,10,16,3,119 }, // VII (indexwheel 33)
                                   
                                 { 5,10,16,7,19,11,23,14,2,1,9,18,115,3,25,17,0,12,4,22,13,8,20,24,6,121,
                                   5,10,16,7,19,11,23,14,2,1,9,18,115,3,25,17,0,12,4,22,13,8,20,24,6,121,
-                                  5,10,16,7,19,11,23,14,2,1,9,18,115,3,25,17,0,12,4,22,13,8,20,24,6,121 }, // VIII
+                                  5,10,16,7,19,11,23,14,2,1,9,18,115,3,25,17,0,12,4,22,13,8,20,24,6,121 }, // VIII (indexwheel 34)
                                   
                                 { 11,4,24,9,21,2,13,8,23,22,15,1,16,12,3,17,19,0,10,25,6,5,20,7,14,18,
                                   11,4,24,9,21,2,13,8,23,22,15,1,16,12,3,17,19,0,10,25,6,5,20,7,14,18,
-                                  11,4,24,9,21,2,13,8,23,22,15,1,16,12,3,17,19,0,10,25,6,5,20,7,14,18 },   // Beta
+                                  11,4,24,9,21,2,13,8,23,22,15,1,16,12,3,17,19,0,10,25,6,5,20,7,14,18 },   // Beta (indexwheel 1)
                                   
                                 { 5,18,14,10,0,13,20,4,17,7,12,1,19,8,24,2,22,11,16,15,25,23,21,6,9,3,
                                   5,18,14,10,0,13,20,4,17,7,12,1,19,8,24,2,22,11,16,15,25,23,21,6,9,3,
-                                  5,18,14,10,0,13,20,4,17,7,12,1,19,8,24,2,22,11,16,15,25,23,21,6,9,3 },   // Gamma
+                                  5,18,14,10,0,13,20,4,17,7,12,1,19,8,24,2,22,11,16,15,25,23,21,6,9,3 },   // Gamma (indexwheel 2)
                                   
                                 { 4,13,10,16,0,20,24,22,9,8,2,14,15,1,11,12,3,23,25,21,5,19,7,17,6,18,
                                   4,13,10,16,0,20,24,22,9,8,2,14,15,1,11,12,3,23,25,21,5,19,7,17,6,18,
@@ -262,6 +262,9 @@ const int ROTORVALSI[10][78] = { { 20,22,24,6,0,3,5,15,21,25,1,4,2,10,12,19,7,23
                                                                                 
                                         
 // Define a 2D Array for keeping the wheel locations & positions
+// wheel[ ][0] : coding wheels (I-VIII is 29-34, Beta/Gamma is 1/2)
+// wheel[ ][1] : inring postitions
+// wheel[ ][2] : outring positions
 int wheel[4][3] = {{29,0,0},
                    {28,0,0},
                    {27,0,0},
@@ -449,7 +452,7 @@ void mode1() {
   digitalWrite(LED1, HIGH);
 
   if (windex) {
-    if ((keyval == 43) || (keyval == 46)) { 
+    if ((keyval == 43) || (keyval == 46)) { // Function button wheel 4 down or up
       if (behavior != 2) {
         wheel[3][0]++;
         windex = false; 
@@ -471,7 +474,7 @@ void mode1() {
   }
 
   if (windex) {
-    if (keyval == 47) { 
+    if (keyval == 47) {  // Function button wheel 3 up
       for (index = wheel[2][0]; (index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index++) {
         if (index > 33) {index = 26;} 
       }
@@ -481,7 +484,7 @@ void mode1() {
   }
 
   if (windex) {
-    if (keyval == 48) { 
+    if (keyval == 48) {  // Function button wheel 2 up
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index++) {
         if (index > 33) {
           index = 26;
@@ -492,7 +495,7 @@ void mode1() {
     }
   }
   if (windex) {
-    if (keyval == 49) { 
+    if (keyval == 49) { // Function button wheel 1 up
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
         if (index > 33) {
           index = 26;
@@ -502,7 +505,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex) {
+  if (windex) { // Function button wheel 3 down
     if (keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
         if (index < 28) {
@@ -513,7 +516,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex) {
+  if (windex) { // Function button wheel 2 down
     if (keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
         if (index < 28) {
@@ -524,7 +527,7 @@ void mode1() {
       windex = false;
     }
   }
-  if (windex) {
+  if (windex) { // Function button wheel 1 down
     if (keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
         if (index < 28) {
@@ -702,9 +705,9 @@ void mode3() {
     windex = false; 
   }
   
-  dig2 = wheel[2][2];  
-  dig3 = wheel[1][2]; 
   dig4 = wheel[0][2]; 
+  dig3 = wheel[1][2]; 
+  dig2 = wheel[2][2];  
   dig1 = wheel[3][2];
   if (behavior == 2) {dig1 = 36;} // Enigma M3
   
@@ -833,7 +836,7 @@ void mode5() {
     // Fast rotor
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[0][0] -27][pv]; 
+    procesval = ROTORVALS[wheel[0][0] - 27][pv]; 
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -843,7 +846,7 @@ void mode5() {
     // Middle rotor
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[1][0] -27][pv]; 
+    procesval = ROTORVALS[wheel[1][0] - 27][pv]; 
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -853,7 +856,7 @@ void mode5() {
     // Slow rotor 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[2][0] -27][pv]; 
+    procesval = ROTORVALS[wheel[2][0] - 27][pv]; 
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -1024,7 +1027,7 @@ void done() {
 }
 
 /**
- * 
+ * Check/rotate wheels
  */   
 void indexwheels() {
   static boolean windex1 = false;
@@ -1033,34 +1036,55 @@ void indexwheels() {
   if (behavior > 0) { 
     if (ROTORVALS[wheel[1][0]-27][wheel[1][2]] >= 100) {
       windex1 = true;
-      if (behavior < 2) { 
+      if (behavior < 2) { // Double stepping?
         windex2 = true;
       }
     }
   }
-  if (debug) {
-    Serial.print("indexwheels() : "); 
-    Serial.print(ROTORVALS[wheel[0][0]-27][wheel[0][2]]); Serial.print("    "); 
-    Serial.print(wheel[0][0]-27); Serial.print("    "); 
-    Serial.println(wheel[0][2]);
+  if (ROTORVALS[wheel[0][0]-27][wheel[0][2]] >= 100) {
+    windex1 = true; // We have a wheel 2 turnover
+  } 
+  wheel[0][2]++; // Rotate wheel 1
+  if (wheel[0][2] > 25) {
+    wheel[0][2] = 0; // Wheel 1 has completed a full revolution
   }
-  if (ROTORVALS[wheel[0][0]-27][wheel[0][2]] >= 100) {windex1 = true;}
-  wheel[0][2]++; 
-  if (wheel[0][2] > 25) {wheel[0][2] = 0;}
   windex = false;
   if (windex1) {
     if (ROTORVALS[wheel[1][0]-27][wheel[1][2]] >= 100) {
-      windex2 = true;
+      windex2 = true; // We have a wheel 3 turnover
     }
-    wheel[1][2]++; 
-    if (wheel[1][2] > 25) {wheel[1][2] = 0;}
+    wheel[1][2]++; // Rotate wheel 2
+    if (wheel[1][2] > 25) {
+      wheel[1][2] = 0; // Wheel 2 has completed a full revolution
+    }
   }
-  windex1 = false;
+  windex1 = false; // Resetting turnover flag
   if (windex2){
-    wheel[2][2]++; 
-    if (wheel[2][2] > 25) {wheel[2][2] = 0;}
-    windex2 = false; 
+    wheel[2][2]++; // Rotate wheel 3
+    if (wheel[2][2] > 25) {
+      wheel[2][2] = 0; // Wheel 3 has completed a full revolution
+    }
+    windex2 = false; // Resetting turnover flag
   } 
+
+  if (debug) {
+    Serial.print("indexwheels() wheels      : "); 
+    Serial.print(wheel[3][0]);  Serial.print("   "); 
+    Serial.print(wheel[2][0]);  Serial.print("   "); 
+    Serial.print(wheel[1][0]);  Serial.print("   "); 
+    Serial.println(wheel[0][0]);
+    Serial.print("indexwheels() inring pos  : "); 
+    Serial.print(wheel[3][1]);  Serial.print("    "); 
+    Serial.print(wheel[2][1]);  Serial.print("    "); 
+    Serial.print(wheel[1][1]);  Serial.print("    "); 
+    Serial.println(wheel[0][1]);
+    Serial.print("indexwheels() outring pos : "); 
+    Serial.print(wheel[3][2]);  Serial.print("    "); 
+    Serial.print(wheel[2][2]);  Serial.print("    "); 
+    Serial.print(wheel[1][2]);  Serial.print("    "); 
+    Serial.println(wheel[0][2]);
+  }
+
 }
 
 /**
