@@ -30,4 +30,4 @@ See the source code for additional documentation.
  - Designed, assembled & programmed by Marc Tessier & James Sanderson 2013-09-20
  - Modified for Prototype PCB pair on 2013-12-04
  - Modified to obey doublesteping and have M3 function 2014-03-22
- - Code formatting, cleanup and documentation + debug to serial - bitjungle 2018-12-31
+ - Code formatting, cleanup and documentation, serial output - bitjungle 2019-01-06
