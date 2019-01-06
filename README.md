@@ -31,3 +31,4 @@ function key. See the source code for additional documentation.
  - Modified for Prototype PCB pair on 2013-12-04
  - Modified to obey doublesteping and have M3 function 2014-03-22
  - Code formatting, cleanup and documentation, serial output - bitjungle 2019-01-06
+ - Norenigma emulation (WORK IN PROGRESS) - bitjungle 2019-mm-dd

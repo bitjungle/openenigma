@@ -17,11 +17,15 @@
  *   - Modified for our Prototype PCB pair on 12/4/13.
  *   - Modified to obey doublesteping and have M3 function 22 MAR 14
  *   - Code formatting, cleanup and documentation, serial output - bitjungle 2019-01-06
+ *   - Norenigma emulation (WORK IN PROGRESS) - bitjungle 2019-mm-dd
  *
  *   This code shall remain in public domain as regulated under the creative commons licence.
  */
 
 // Define global variables
+
+const bool DEBUG = false; // Set to false if serial output is not needed
+
 const int NUMCHARS = 26;    // Number of characters available on the Enigma
 const char CHARS[NUMCHARS+1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Including NULL 
 
@@ -55,10 +59,12 @@ int dig2 = 37;
 int dig3 = 37;
 int dig4 = 37;
 
-const int MARQUEEMAXCHARS = 15;
-const int MARQUEETEXT[3][MARQUEEMAXCHARS] ={{36,4,13,8,6,12,0,36,12,30,36,36,36,36,36},  //Enigma M4
-                                            {36,4,13,8,6,12,0,36,12,30,36,3,1,11,36},    //Enigma M4 DBL
-                                            {36,4,13,8,6,12,0,36,12,29,36,36,36,36,36}}; //Enigma M3
+const int EMULATORS = 4; // Number of implementet emulators
+const int MARQUEECHARS = 21;
+const int MARQUEETEXT[EMULATORS][MARQUEECHARS] = {{36,36,36,36,4,13,8,6,12,0,36,12,30,36,36,36,36,36,36,36,36},  //Enigma M4
+                                                  {36,36,36,36,4,13,8,6,12,0,36,12,30,36,3,1,11,36,36,36,36},    //Enigma M4 DBL
+                                                  {36,36,36,36,4,13,8,6,12,0,36,12,29,36,36,36,36,36,36,36,36},  //Enigma M3
+                                                  {36,36,36,36,13,14,17,4,13,8,6,12,0,36,36,36,36,36,36,36,36}}; //Norenigma
 
 // Define the sixteen-segment display LED Pins as 2 Arrays
 const int SEGMENTPINS[17] = {24,22,25,31,38,36,32,30,28,26,23,27,33,35,34,29,37}; //cathode array
@@ -228,7 +234,6 @@ const int ROTORVALSI[10][78] = { { 20,22,24,6,0,3,5,15,21,25,1,4,2,10,12,19,7,23
                                    19,0,6,1,15,2,18,3,16,4,20,5,21,13,25,7,24,8,23,9,22,11,17,10,14,12,
                                    19,0,6,1,15,2,18,3,16,4,20,5,21,13,25,7,24,8,23,9,22,11,17,10,14,12 },   // III i
                                 
-                                
                                  { 7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5,
                                    7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5,
                                    7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5 },  // IV i
@@ -237,8 +242,8 @@ const int ROTORVALSI[10][78] = { { 20,22,24,6,0,3,5,15,21,25,1,4,2,10,12,19,7,23
                                    16,2,24,11,23,22,4,13,5,19,25,14,18,12,21,9,20,3,10,6,8,0,17,15,7,1,
                                    16,2,24,11,23,22,4,13,5,19,25,14,18,12,21,9,20,3,10,6,8,0,17,15,7,1 },  // V i
                                   
-                                 { 18,10,23,16,11,7,2,13,22,0,17,21,06,12,4,1,9,15,19,24,5,3,25,20,8,14,
-                                   18,10,23,16,11,7,2,13,22,0,17,21,06,12,4,1,9,15,19,24,5,3,25,20,8,14,
+                                 { 18,10,23,16,11,7,2,13,22,0,17,21,06,12,4,1,9,15,19,24,5,3,25,20,8,14,   // Error here? 
+                                   18,10,23,16,11,7,2,13,22,0,17,21,06,12,4,1,9,15,19,24,5,3,25,20,8,14,   // Value 06?
                                    18,10,23,16,11,7,2,13,22,0,17,21,06,12,4,1,9,15,19,24,5,3,25,20,8,14 }, // VI i
                               
                                  { 16,12,6,24,21,15,4,3,17,2,22,19,8,0,13,20,23,5,10,25,14,18,11,7,9,1,
@@ -257,8 +262,56 @@ const int ROTORVALSI[10][78] = { { 20,22,24,6,0,3,5,15,21,25,1,4,2,10,12,19,7,23
                                    4,11,15,25,7,0,23,9,13,24,3,17,10,5,2,19,18,8,1,12,6,22,16,21,14,20,
                                    4,11,15,25,7,0,23,9,13,24,3,17,10,5,2,19,18,8,1,12,6,22,16,21,14,20 }   // Gamma i
                                 }; 
-                                                                                
-                                        
+
+// // NORWAY ENIGMA WHEEL WIRING - https://cryptomuseum.com/crypto/enigma/wiring.htm#3                                     
+const int NORENIGMA[6][78] = { { 22,19,14,10,0,18,20,24,21,17,1,23,9,7,16,2,115,25,4,5,12,3,8,13,11,6,
+                                 22,19,14,10,0,18,20,24,21,17,1,23,9,7,16,2,115,25,4,5,12,3,8,13,11,6,
+                                 22,19,14,10,0,18,20,24,21,17,1,23,9,7,16,2,115,25,4,5,12,3,8,13,11,6 }, // I (indexwheel 27)
+
+                               { 6,9,11,15,120,1,18,22,4,12,2,19,16,21,7,23,0,14,5,25,3,17,10,24,13,8,
+                                 6,9,11,15,120,1,18,22,4,12,2,19,16,21,7,23,0,14,5,25,3,17,10,24,13,8,
+                                 6,9,11,15,120,1,18,22,4,12,2,19,16,21,7,23,0,14,5,25,3,17,10,24,13,8 }, // II  (indexwheel 28)
+                                
+                               { 9,22,5,12,7,13,1,15,20,18,3,24,19,8,23,21,25,6,17,16,11,100,14,4,10,2,
+                                 9,22,5,12,7,13,1,15,20,18,3,24,19,8,23,21,25,6,17,16,11,100,14,4,10,2,
+                                 9,22,5,12,7,13,1,15,20,18,3,24,19,8,23,21,25,6,17,16,11,100,14,4,10,2 }, // III (indexwheel 29)
+                                
+                               { 4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1,
+                                 4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1,
+                                 4,18,14,21,15,25,9,0,24,116,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1 }, // IV (indexwheel 30)
+                                  
+                               { 7,4,9,23,16,14,19,25,1,21,5,3,0,18,2,8,11,22,15,6,24,13,12,20,17,110,
+                                 7,4,9,23,16,14,19,25,1,21,5,3,0,18,2,8,11,22,15,6,24,13,12,20,17,110,
+                                 7,4,9,23,16,14,19,25,1,21,5,3,0,18,2,8,11,22,15,6,24,13,12,20,17,110  }, // V (indexwheel 31)
+                                
+                               { 12,14,22,9,24,15,20,23,13,3,18,17,0,8,1,5,21,11,10,25,6,16,2,7,4,19,
+                                 12,14,22,9,24,15,20,23,13,3,18,17,0,8,1,5,21,11,10,25,6,16,2,7,4,19,
+                                 12,14,22,9,24,15,20,23,13,3,18,17,0,8,1,5,21,11,10,25,6,16,2,7,4,19 }    // UKW
+                              };
+
+// Inverted rotor values
+const int NORENIGMAI[5][78] = { { 4,10,15,21,18,19,25,13,22,12,3,24,20,23,2,16,14,9,5,1,6,8,0,11,7,17,
+                                  4,10,15,21,18,19,25,13,22,12,3,24,20,23,2,16,14,9,5,1,6,8,0,11,7,17,
+                                  4,10,15,21,18,19,25,13,22,12,3,24,20,23,2,16,14,9,5,1,6,8,0,11,7,17  }, // I i
+                          
+                                { 16,5,10,20,8,18,0,14,25,1,22,2,9,24,17,3,12,21,6,11,4,13,7,15,23,19,
+                                  16,5,10,20,8,18,0,14,25,1,22,2,9,24,17,3,12,21,6,11,4,13,7,15,23,19,
+                                  16,5,10,20,8,18,0,14,25,1,22,2,9,24,17,3,12,21,6,11,4,13,7,15,23,19  }, // II i
+                              
+                                { 21,6,25,10,23,2,17,4,13,0,24,20,3,5,22,7,19,18,9,12,8,15,1,14,11,16,
+                                  21,6,25,10,23,2,17,4,13,0,24,20,3,5,22,7,19,18,9,12,8,15,1,14,11,16,
+                                  21,6,25,10,23,2,17,4,13,0,24,20,3,5,22,7,19,18,9,12,8,15,1,14,11,16 },   // III i
+                              
+                              
+                                { 7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5,
+                                  7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5,
+                                  7,25,22,21,0,17,19,13,11,6,20,15,23,16,2,4,9,12,1,18,10,3,24,14,8,5 },  // IV i
+                                
+                                { 12,8,14,11,1,10,19,0,15,2,25,16,22,21,5,18,4,24,13,6,23,9,17,3,20,7,
+                                  12,8,14,11,1,10,19,0,15,2,25,16,22,21,5,18,4,24,13,6,23,9,17,3,20,7,
+                                  12,8,14,11,1,10,19,0,15,2,25,16,22,21,5,18,4,24,13,6,23,9,17,3,20,7 }   // V i
+                              }; 
+
 // Define a 2D Array for keeping the wheel locations & positions
 // wheel[ ][0] : coding wheels (I-VIII is 29-34, Beta/Gamma is 1/2)
 // wheel[ ][1] : inring postitions
@@ -306,8 +359,8 @@ void setup() {
   }
 
   // Start serial communication
-  Serial.begin(9600);
-
+  if (DEBUG) {Serial.begin(9600);}
+  
   // Initialize all 4 pushbutton pins as Input    
   for (int index = 0; index <= 3; index++) {
     pinMode(INPINS[index], INPUT);
@@ -330,12 +383,13 @@ void loop() {
     // 0 : Enigma M4 
     // 1 : Enigma M4 with double stepping
     // 2 : Enigma M3
+    // 3 : Norenigma
     behavior++; 
     windex = false; 
-    if (behavior > 2) {
+    if (behavior > (EMULATORS - 1)) {
       behavior = 0; // resetting
     } 
-    Serial.print("loop() : behavior="); Serial.println(behavior);
+    if (DEBUG) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
 
   if ((keyval == 45) && (windex)) {modeselect();}
@@ -405,8 +459,8 @@ int readkbde() {
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  
 
   // prints keybord value to serial monitor
-  if (kval != kvalo && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
-  if (kval != kvalo && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
+  if (DEBUG && kval != kvalo && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
+  if (DEBUG && kval != kvalo && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
   return kval;
 }
 
@@ -416,7 +470,7 @@ int readkbde() {
 void modeselect() {
   mode++;
   if (mode >=6) {mode = 0;}
-  Serial.print("modeselect() : mode="); Serial.println(mode);
+  if (DEBUG) {Serial.print("modeselect() : mode="); Serial.println(mode);}
   windex = false;
 }
 
@@ -829,7 +883,8 @@ void mode5() {
     // Fast rotor
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[0][0] - 27][pv]; 
+    //procesval = ROTORVALS[wheel[0][0] - 27][pv]; 
+    procesval = calcprocessval(wheel[0][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -839,7 +894,8 @@ void mode5() {
     // Middle rotor
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[1][0] - 27][pv]; 
+    //procesval = ROTORVALS[wheel[1][0] - 27][pv]; 
+    procesval = calcprocessval(wheel[1][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -849,7 +905,8 @@ void mode5() {
     // Slow rotor 
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[2][0] - 27][pv]; 
+    //procesval = ROTORVALS[wheel[2][0] - 27][pv]; 
+    procesval = calcprocessval(wheel[2][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -857,33 +914,42 @@ void mode5() {
     signalpath[4] = CHARS[procesval];
   
     // Thin rotor
-    pv = (procesval + (wheel[3][2] - wheel[3][1]));
-    if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALS[wheel[3][0] + 7][pv]; 
-    if (procesval >= 100) {procesval = procesval - 100;}
-    procesval = (procesval - (wheel[3][2] - wheel[3][1]));
-    if (procesval < 0) {procesval = procesval + 26;}
-    if (procesval > 25) {procesval = procesval - 26;}
-    signalpath[5] = CHARS[procesval];
-  
-    // Reflector UKW-B [9] or UKW-C [10] 
-    procesval = ROTORVALS[reflect[0] + 9][procesval];
-    signalpath[6] = CHARS[procesval];
-  
-    // Thin rotor inverted (return)
-    pv = (procesval + (wheel[3][2] - wheel[3][1]));
-    if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALSI[wheel[3][0] + 7][pv];
-    if (procesval >= 100) {procesval = procesval - 100;}
-    procesval = (procesval - (wheel[3][2] - wheel[3][1]));
-    if (procesval < 0) {procesval = procesval + 26;}
-    if (procesval > 25) {procesval = procesval - 26;}
-    signalpath[7] = CHARS[procesval];
+    if (behavior == 3) { // Norenigma
+      signalpath[5] = '-';
+      // Reflector UKW
+      procesval = NORENIGMA[5][procesval];
+      signalpath[6] = CHARS[procesval];
+      signalpath[7] = '-';
+    } else {// Enigma I, M3 or M4
+      pv = (procesval + (wheel[3][2] - wheel[3][1]));
+      if (pv < 0) {pv = pv + 26;}
+      //procesval = ROTORVALS[wheel[3][0] + 7][pv]; 
+      procesval = calcprocessval(wheel[3][0], 7, pv);
+      if (procesval >= 100) {procesval = procesval - 100;}
+      procesval = (procesval - (wheel[3][2] - wheel[3][1]));
+      if (procesval < 0) {procesval = procesval + 26;}
+      if (procesval > 25) {procesval = procesval - 26;}
+      signalpath[5] = CHARS[procesval];
+      // Reflector UKW-B [9] or UKW-C [10] 
+      procesval = ROTORVALS[reflect[0] + 9][procesval];
+      signalpath[6] = CHARS[procesval];
+      // Thin rotor inverted (return)
+      pv = (procesval + (wheel[3][2] - wheel[3][1]));
+      if (pv < 0) {pv = pv + 26;}
+      //procesval = ROTORVALSI[wheel[3][0] + 7][pv];
+      procesval = calcprocessvali(wheel[3][0], 7, pv);
+      if (procesval >= 100) {procesval = procesval - 100;}
+      procesval = (procesval - (wheel[3][2] - wheel[3][1]));
+      if (procesval < 0) {procesval = procesval + 26;}
+      if (procesval > 25) {procesval = procesval - 26;}
+      signalpath[7] = CHARS[procesval];
+    }
 
     // Slow rotor inverted (return)
     pv = (procesval + (wheel[2][2] - wheel[2][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALSI[wheel[2][0] - 27][pv]; 
+    //procesval = ROTORVALSI[wheel[2][0] - 27][pv]; 
+    procesval = calcprocessvali(wheel[2][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[2][2] - wheel[2][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -893,7 +959,8 @@ void mode5() {
     // Middle rotor inverted (return)
     pv = (procesval + (wheel[1][2] - wheel[1][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALSI[wheel[1][0] - 27][pv]; 
+    //procesval = ROTORVALSI[wheel[1][0] - 27][pv]; 
+    procesval = calcprocessvali(wheel[1][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[1][2] - wheel[1][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -903,7 +970,8 @@ void mode5() {
     // Fast rotor inverted (return)
     pv = (procesval + (wheel[0][2] - wheel[0][1]));
     if (pv < 0) {pv = pv + 26;}
-    procesval = ROTORVALSI[wheel[0][0] - 27][pv]; 
+    //procesval = ROTORVALSI[wheel[0][0] - 27][pv]; 
+    procesval = calcprocessvali(wheel[0][0], -27, pv);
     if (procesval >= 100) {procesval = procesval - 100;}
     procesval = (procesval - (wheel[0][2] - wheel[0][1]));
     if (procesval < 0) {procesval = procesval + 26;}
@@ -918,7 +986,7 @@ void mode5() {
 
     signalpath[11] = CHARS[procesval]; 
     signalpath[12] = '\0';   
-    if (printsignalpath) {
+    if (DEBUG && printsignalpath) {
       Serial.print("mode5() : "); 
       Serial.println(signalpath);
     }    
@@ -954,7 +1022,7 @@ void lampita() {
   if (lampval <= 25) {
   digitalWrite(LAMPARRAY[lampval][0],0);
   digitalWrite(LAMPARRAY[lampval][1],0);
-  if (windex) {Serial.print("lampita() : lampval=");Serial.println(lampval);}
+  if (DEBUG && windex) {Serial.print("lampita() : lampval=");Serial.println(lampval);}
   delay(1);
   }
 }
@@ -966,7 +1034,7 @@ void lampitb(){
   if (lampval <= 25) {
     digitalWrite(LAMPARRAY[lampval][0],1);
     digitalWrite(LAMPARRAY[lampval][1],1);  
-    if (windex) {Serial.print("lampitb() : lampval=");Serial.println(lampval);}
+    if (DEBUG && windex) {Serial.print("lampitb() : lampval=");Serial.println(lampval);}
   }
 }
 
@@ -994,7 +1062,7 @@ void marquee() {
   dig2 = MARQUEETEXT[behavior][mdex + 1];
   dig3 = MARQUEETEXT[behavior][mdex + 2];
   dig4 = MARQUEETEXT[behavior][mdex + 3];
-  if (mdex >= MARQUEEMAXCHARS) {mdex = 0;}
+  if (mdex >= MARQUEECHARS) {mdex = 0;}
   nixisend();              
 }
 
@@ -1066,23 +1134,23 @@ void indexwheels() {
     }
     windex2 = false; // Resetting turnover flag
   } 
-
-  Serial.print("indexwheels() wheels      : "); 
-  Serial.print(wheel[3][0]);  Serial.print("   "); 
-  Serial.print(wheel[2][0]);  Serial.print("   "); 
-  Serial.print(wheel[1][0]);  Serial.print("   "); 
-  Serial.println(wheel[0][0]);
-  Serial.print("indexwheels() inring pos  : "); 
-  Serial.print(wheel[3][1]);  Serial.print("    "); 
-  Serial.print(wheel[2][1]);  Serial.print("    "); 
-  Serial.print(wheel[1][1]);  Serial.print("    "); 
-  Serial.println(wheel[0][1]);
-  Serial.print("indexwheels() outring pos : "); 
-  Serial.print(wheel[3][2]);  Serial.print("    "); 
-  Serial.print(wheel[2][2]);  Serial.print("    "); 
-  Serial.print(wheel[1][2]);  Serial.print("    "); 
-  Serial.println(wheel[0][2]);
-
+  if (DEBUG) {
+    Serial.print("indexwheels() wheels      : "); 
+    Serial.print(wheel[3][0]);  Serial.print("   "); 
+    Serial.print(wheel[2][0]);  Serial.print("   "); 
+    Serial.print(wheel[1][0]);  Serial.print("   "); 
+    Serial.println(wheel[0][0]);
+    Serial.print("indexwheels() inring pos  : "); 
+    Serial.print(wheel[3][1]);  Serial.print("    "); 
+    Serial.print(wheel[2][1]);  Serial.print("    "); 
+    Serial.print(wheel[1][1]);  Serial.print("    "); 
+    Serial.println(wheel[0][1]);
+    Serial.print("indexwheels() outring pos : "); 
+    Serial.print(wheel[3][2]);  Serial.print("    "); 
+    Serial.print(wheel[2][2]);  Serial.print("    "); 
+    Serial.print(wheel[1][2]);  Serial.print("    "); 
+    Serial.println(wheel[0][2]);
+  }
 }
 
 /**
@@ -1101,10 +1169,37 @@ void readplugs() {
         plugval[0][indexb] = 1;
         plugval[1][index] = indexb; 
         plugval[1][indexb] = index;
-        Serial.print("readplugs() : "); Serial.print(CHARS[index]); Serial.print(" -> "); Serial.println(CHARS[indexb]);
+        if (DEBUG) {
+          Serial.print("readplugs() : "); 
+          Serial.print(CHARS[index]); 
+          Serial.print(" -> "); 
+          Serial.println(CHARS[indexb]);
+        }
       }
     }
     pinMode(PLUGPINS[index], INPUT);
   }
   plugread = true;
+}
+
+/**
+ * 
+ */
+int calcprocessval(int ringpos, int offset, int pv) {
+  if (behavior == 3) { // Emulating a Norenigma
+    return NORENIGMA[ringpos + offset][pv];
+  } else { // Enigma I, M3 or M4
+    return ROTORVALS[ringpos + offset][pv];
+  }
+}
+
+/**
+ * 
+ */
+int calcprocessvali(int ringpos, int offset, int pv) {
+  if (behavior == 3) { // Emulating a Norenigma
+    return NORENIGMAI[ringpos + offset][pv];
+  } else { // Enigma I, M3 or M4
+    return ROTORVALSI[ringpos + offset][pv];
+  }
 }
