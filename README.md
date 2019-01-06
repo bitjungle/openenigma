@@ -22,8 +22,10 @@ To understand how to operate the S&T GeoTronics M4 Enigma, please refer to the f
 
 The source code for the S&T GeoTronics Enigma Mark 4 IP Kit Plugged has been modified to 
 output debug info over serial communication (via USB). It can also be set to emulate the 
-Enigma M3. To switch between M4 mode, M4 double stepping mode and M3 mode, use the upper left 
-function key. See the source code for additional documentation.
+Enigma M3 and Norenigma. 
+
+To switch between Enigma M4 mode, M4 double stepping mode, M3 mode and Norenigma mode, 
+use the upper left function key. See the source code for additional documentation.
 
 ## Release Notes
 
