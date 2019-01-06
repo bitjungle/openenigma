@@ -4,7 +4,7 @@
 
 This repository contains the Arduino code for the [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](https://www.stgeotronics.com/Enigma-Mark-4-IP-Kit-Plugged-KIT-Enigma-Plugged.htm). The S&T 
 GeoTronics Enigma Mark 4 contains an Arduino Mega custom shield programmed to replicate the 
-behavior of a [German Enigma machine M3 and M4](https://en.wikipedia.org/wiki/Enigma_machine). 
+behavior of a [German Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine). 
 It consists of 4 sixteen-segment display units, 5 LEDs, 26 lamps setup as keyboard, 26 keyboard 
 buttons and 10 function keys. 
 
