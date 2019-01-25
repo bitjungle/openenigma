@@ -39,7 +39,7 @@ function wheel_wiring_form($input = '', $turnover = '') {
 
 /**
  * Take a string of characters [A-Z] as input, and convert to two
- * numeric arrasy (forward and return wheel values).
+ * numeric arrays (forward and return wheel values).
  */
 function wheel_char_to_num($wheel_chars, $turnover = '') {
     $num_array = []; // numeric output array
@@ -118,5 +118,14 @@ if (isset($_POST['wheel_wiring'])) {
 <?php
 echo $output;
 ?>
+<hr />
+<footer>
+    <div style="font-size: x-small; margin-top: 2em;">
+    <a href="https://opensource.org/licenses/MIT">MIT License</a> <br/>
+    &copy; 2019 bitjungle <br/>
+    <a href="https://github.com/bitjungle/openenigma/blob/master/utils/rotorconvert.php">
+    Source code on Github</a>
+    </div>
+</footer>
 </body>
 </html>
