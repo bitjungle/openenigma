@@ -1,6 +1,6 @@
 # Open Enigma
 
-[![Banner](docs/banner.jpg)](https://www.instructables.com/id/Make-your-own-Enigma-Replica/)
+[![Banner](img/banner-2.jpg)](https://www.instructables.com/id/Make-your-own-Enigma-Replica/)
 
 This repository contains the Arduino code for the [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](https://www.stgeotronics.com/Enigma-Mark-4-IP-Kit-Plugged-KIT-Enigma-Plugged.htm). The modified code for the S&T GeoTronics Enigma Mark 4 in this repository emulates the [Enigma M3](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#5), [Enigma M4](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#6) (including [double stepping](http://www.intelligenia.org/downloads/rotors1.pdf)) and the [Norenigma](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#3).
 
