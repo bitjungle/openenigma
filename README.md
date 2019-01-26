@@ -2,16 +2,11 @@
 
 [![Banner](docs/banner.jpg)](https://www.instructables.com/id/Make-your-own-Enigma-Replica/)
 
-This repository contains the Arduino code for the [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](https://www.stgeotronics.com/Enigma-Mark-4-IP-Kit-Plugged-KIT-Enigma-Plugged.htm). The S&T 
-GeoTronics Enigma Mark 4 contains an Arduino Mega custom shield programmed to replicate the 
-behavior of a [German Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine). 
-It consists of 4 sixteen-segment display units, 5 LEDs, 26 lamps setup as keyboard, 26 keyboard 
-buttons and 10 function keys. 
+This repository contains the Arduino code for the [S&T GeoTronics Enigma Mark 4 IP Kit Plugged](https://www.stgeotronics.com/Enigma-Mark-4-IP-Kit-Plugged-KIT-Enigma-Plugged.htm). The modified code for the S&T GeoTronics Enigma Mark 4 in this repository emulates the [Enigma M3](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#5), [Enigma M4](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#6) (including [double stepping](http://www.intelligenia.org/downloads/rotors1.pdf)) and the [Norenigma](https://www.cryptomuseum.com/crypto/enigma/wiring.htm#3).
 
 ## Installation Instructions
 
-Download the Arduino [source code for S&T GeoTronics Enigma Mark 4 IP Kit Plugged](Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino). Connect your S&T GeoTronics Enigma 
-Mark 4 to your computer via USB, and upload the code to the Arduino Mega using the 
+Download the [Arduino source code for S&T GeoTronics Enigma Mark 4 IP Kit Plugged](Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino). Connect your S&T GeoTronics Enigma Mark 4 to your computer via USB, and upload the code to the Arduino Mega using the 
 [Arduino IDE](https://www.arduino.cc/en/Main/Software).
 
 ## Operation Instructions
@@ -24,7 +19,7 @@ The source code for the S&T GeoTronics Enigma Mark 4 IP Kit Plugged has been mod
 output debug info over serial communication (via USB). It can also be set to emulate the 
 Enigma M3 and Norenigma. 
 
-To switch between Enigma M4 mode, M4 double stepping mode, M3 mode and Norenigma mode, 
+To switch between Enigma M4, M4 double stepping, M3 and Norenigma mode, 
 use the upper left function key. See the source code for additional documentation.
 
 ## Release Notes
@@ -33,4 +28,4 @@ use the upper left function key. See the source code for additional documentatio
  - Modified for Prototype PCB pair on 2013-12-04
  - Modified to obey doublesteping and have M3 function 2014-03-22
  - Code formatting, cleanup and documentation, serial output - bitjungle 2019-01-06
- - Norenigma emulation (WORK IN PROGRESS) - bitjungle 2019-mm-dd
+ - Norenigma emulation - bitjungle 2019-01-26
