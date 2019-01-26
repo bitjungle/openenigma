@@ -523,7 +523,9 @@ void mode1() {
   if (windex) {
     if (keyval == 47) {  // Function button wheel 3 up
       for (index = wheel[2][0]; (index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index++) {
-        if (index > 33) {index = 26;} 
+        if (index > 33 || (behavior == 3 && index > 30)) { //Norenigma (3) only has 5 wheels
+          index = 26;
+        } 
       }
       wheel[2][0] = index;  
       windex = false;
@@ -533,7 +535,7 @@ void mode1() {
   if (windex) {
     if (keyval == 48) {  // Function button wheel 2 up
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index++) {
-        if (index > 33) {
+        if (index > 33 || (behavior == 3 && index > 30)) { //Norenigma (3) only has 5 wheels
           index = 26;
         } 
       } 
@@ -544,7 +546,7 @@ void mode1() {
   if (windex) {
     if (keyval == 49) { // Function button wheel 1 up
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
-        if (index > 33) {
+        if (index > 33 || (behavior == 3 && index > 30)) { //Norenigma (3) only has 5 wheels
           index = 26;
         } 
       } 
@@ -556,7 +558,11 @@ void mode1() {
     if (keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
         if (index < 28) {
-          index = 35;
+          if (behavior == 3) { //Norenigma (3) only has 5 wheels
+            index = 31;
+          } else {
+            index = 35;
+          }
         } 
       } 
       wheel[2][0] = index;  
@@ -567,7 +573,11 @@ void mode1() {
     if (keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
         if (index < 28) {
-          index = 35;
+          if (behavior == 3) { //Norenigma (3) only has 5 wheels
+            index = 31;
+          } else {
+            index = 35;
+          }
         } 
       } 
       wheel[1][0] = index;  
@@ -578,7 +588,11 @@ void mode1() {
     if (keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
         if (index < 28) {
-          index = 35;
+          if (behavior == 3) { //Norenigma (3) only has 5 wheels
+            index = 31;
+          } else {
+            index = 35;
+          }
         } 
       } 
       wheel[0][0] = index;  
