@@ -17,7 +17,7 @@
  *   - Modified for our Prototype PCB pair on 12/4/13.
  *   - Modified to obey doublesteping and have M3 function 22 MAR 14
  *   - Code formatting, cleanup and documentation, serial output - bitjungle 2019-01-06
- *   - Norenigma emulation (WORK IN PROGRESS) - bitjungle 2019-mm-dd
+ *   - Norenigma emulation - bitjungle 2019-01-26
  *
  *   This code shall remain in public domain as regulated under the creative commons licence.
  */
@@ -500,7 +500,7 @@ void mode1() {
 
   if (windex) {
     if ((keyval == 43) || (keyval == 46)) { // Function button wheel 4 down or up
-      if (behavior != 2) {
+      if (behavior < 2) { // ENIGMA M4
         wheel[3][0]++;
         windex = false; 
         if (wheel[3][0] > 2) {
@@ -510,7 +510,7 @@ void mode1() {
             reflect[0] = 1;
             }
           } 
-      } else {
+      } else { // Enigma M3 or Norenigma
         reflect[0]++; 
         windex = false; 
         if (reflect[0] > 2) {
@@ -590,13 +590,13 @@ void mode1() {
   dig3 = wheel[1][0]; 
   dig4 = wheel[0][0]; 
 
-  if (behavior != 2) { // Enigma M4
+  if (behavior < 2) { // Enigma M4
     if (wheel[3][0] == 1 ) { 
       dig1 = 1;
     } else {
       dig1 = 6;
     }
-  } else { // Enigma M3
+  } else { // Enigma M3 or Norenigma
     dig1 = 36;
   } 
 
@@ -616,7 +616,7 @@ void mode1() {
 void mode2() {
   digitalWrite(LED2, HIGH);
   if (windex) {
-    if (behavior != 2) { 
+    if (behavior < 2) { // Enigma M4
       if (keyval == 46) {
         wheel[3][1]++; 
         if (wheel[3][1] > 25) {
@@ -642,7 +642,7 @@ void mode2() {
         wheel[0][1] = 0;
       }
     }
-    if (behavior != 2) {
+    if (behavior < 2) {// Enigma M4
       if (keyval == 43) {
         wheel[3][1]--; 
         if (wheel[3][1] < 0) {
@@ -674,9 +674,9 @@ void mode2() {
   dig2 = wheel[2][1];  
   dig3 = wheel[1][1]; 
   dig4 = wheel[0][1]; 
-  if (behavior != 2) { // Enigma M4
+  if (behavior < 2) { // Enigma M4
     dig1 = wheel[3][1];
-  } else { // Enigma M3
+  } else { // Enigma M3 or Norenigma
     dig1 = 36;
   }
   
@@ -697,7 +697,7 @@ void mode2() {
 void mode3() {
   digitalWrite(LED3, HIGH);
   if (windex) {
-    if (behavior != 2) { // Enigma M4
+    if (behavior < 2) { // Enigma M4
       if (keyval == 46) {
         wheel[3][2]++; 
         if (wheel[3][2] > 25) {
@@ -723,7 +723,7 @@ void mode3() {
         wheel[0][2] = 0;
       }
     }
-    if (behavior != 2) { // Enigma M4
+    if (behavior < 2) { // Enigma M4
       if (keyval == 43) {
         wheel[3][2]--; 
         if (wheel[3][2] < 0) {
@@ -756,7 +756,7 @@ void mode3() {
   dig3 = wheel[1][2]; 
   dig2 = wheel[2][2];  
   dig1 = wheel[3][2];
-  if (behavior == 2) {dig1 = 36;} // Enigma M3
+  if (behavior > 1) {dig1 = 36;} // Enigma M3 or Norenigma
   
   nixisend();
   
@@ -999,7 +999,7 @@ void mode5() {
   dig3 = wheel[1][2]; 
   dig2 = wheel[2][2];  
   dig1 = wheel[3][2];
-  if (behavior == 2) {dig1 = 36;} // Enigma M3
+  if (behavior > 1) {dig1 = 36;} // Enigma M3 or Norenigma
   
   lampita();
   delay(3);
