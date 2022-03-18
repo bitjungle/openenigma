@@ -29,7 +29,7 @@
 function wheel_wiring_form($input = '', $turnover = '') {
     $selected_zero = '';
     $selected_one = '';
-    $form = "<form action=\"rotorconvert.php\" method=\"post\">\n";
+    $form = "<form action=\"index.php\" method=\"post\">\n";
     $form .= "Enter wiring string: <input type=\"text\" name=\"wheel_wiring\" placeholder=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\" value=\"{$input}\" size=\"40\"><br/>\n";
     $form .= "Turnover: <input type=\"text\" name=\"wheel_turnover\" value=\"{$turnover}\" size=\"4\">\n";
     $form .= "<input type=\"submit\" value=\"Convert\">\n";
@@ -123,7 +123,7 @@ echo $output;
     <div style="font-size: x-small; margin-top: 2em;">
     <a href="https://opensource.org/licenses/MIT">MIT License</a> <br/>
     &copy; 2019 bitjungle <br/>
-    <a href="https://github.com/bitjungle/openenigma/blob/master/utils/rotorconvert.php">
+    <a href="https://github.com/bitjungle/openenigma/blob/master/utils/rotorconvert/">
     Source code on Github</a>
     </div>
 </footer>
