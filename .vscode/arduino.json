@@ -1,0 +1,6 @@
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "sketch": "Open_Enigma_M4_Plugboard/Open_Enigma_M4_Plugboard.ino",
+    "output": "./build"
+}
