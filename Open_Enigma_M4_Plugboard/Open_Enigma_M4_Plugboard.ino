@@ -42,7 +42,6 @@ int kvalo = 100;  // last read key value
 
 boolean windex = false; // windex showing true indicates the return of a fresh key stroke
 
-int lampval = 100;
 int procesval = 0;
 int procesvala = 0;
 
