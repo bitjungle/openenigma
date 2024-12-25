@@ -44,8 +44,6 @@ boolean windex = false; // windex showing true indicates the return of a fresh k
 int procesval = 0;
 int procesvala = 0;
 
-int mdex = 0;
-
 int behavior = 0; // Switch between various Enigma models 
 
 boolean plugread = false; // Toggle after plogboard has been read
