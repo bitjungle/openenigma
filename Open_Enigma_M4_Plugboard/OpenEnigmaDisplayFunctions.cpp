@@ -75,7 +75,7 @@ void sixteenSegWrite(int digit, int character) {
 /**
  * @brief Send DONE to the LED display.
  * 
- * Send the characters D O N E to the LED display, 
+ * Send the characters 'DONE' to the LED display, 
  * and reset the dig[1-4] vars to 37.
  * 
  * @param None

@@ -26,7 +26,7 @@ void modeselect(int &mode) {
  * Mode 0
  * Default Mode: Enigma is a typewriter
  */
-void mode0() {
+void mode0(int keyval) {
   int lampval = 100; // Default value is for a function key
   if ((keyval >= 0) && (keyval <= 25)) {
     lampval = keyval;
@@ -41,7 +41,7 @@ void mode0() {
  * Mode 1
  * Select the rotors & the reflector  
  */
-void mode1() {
+void mode1(int keyval) {
   int index;
   digitalWrite(LED1, HIGH);
 
@@ -174,7 +174,7 @@ void mode1() {
  * Mode 2
  * Position the inner setting of each rotor  
  */
-void mode2() {
+void mode2(int keyval) {
   digitalWrite(LED2, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -255,7 +255,7 @@ void mode2() {
  * Mode 3
  * Position the Start character of each Wheel  
  */
-void mode3() {
+void mode3(int keyval) {
   digitalWrite(LED3, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -333,7 +333,7 @@ void mode3() {
  * Mode 4
  * Define the Plugboard pairs  
  */
-void mode4() {
+void mode4(int keyval) {
   static int paindex = 0; 
   static int pbindex = 1;
 
@@ -415,7 +415,7 @@ void mode4() {
  * Mode 5
  * This is normal operation mode to Encrypt/Decrypt  
  */
-void mode5() {
+void mode5(int keyval) {
   int pv = 0;
   int lampval = 100; // Default value is for a function key
   digitalWrite(LED5, HIGH);

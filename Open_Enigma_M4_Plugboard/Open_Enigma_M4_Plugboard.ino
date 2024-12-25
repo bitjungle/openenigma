@@ -37,8 +37,6 @@
 * Setting initial values for global variables used across the code
 * TODO: Narrow scope where possible.
 */
-int keyval = 100; // currently pressed key value
-
 boolean windex = false; // windex showing true indicates the return of a fresh key stroke
 
 int procesval = 0;
@@ -78,7 +76,8 @@ int pluguse = 0; // holds the total nomber of plugs used (10 max)
 unsigned long time;  // Number of milliseconds since start
 unsigned long otime; // Used in keyboard debounce code
 int mode; // Current mode of operation
-int kvalo;  // last read key value
+int keyval; // currently pressed key value
+int kvalo; // last read key value
 
 
 /**
@@ -89,7 +88,8 @@ void setup() {
   time = millis();
   otime = time;
 
-  // Initialize last read key value
+  // Initialize key values
+  keyval = 100;
   kvalo = 100;
 
   // Initialize mode
@@ -166,11 +166,11 @@ void loop() {
 
   if ((keyval == 45) && (windex)) {modeselect(mode);}
   // The whole Enigma machine operation revolves around which operating mode is current  
-  if (mode == 0) {mode0();}
-  else if (mode == 1) {mode1();} // Rotors
-  else if (mode == 2) {mode2();} // Inrings
-  else if (mode == 3) {mode3();} // Outrings
-  else if (mode == 4) {mode4();} // Plugs
-  else if (mode == 5) {mode5();} // Run
+  if (mode == 0) {mode0(keyval);}
+  else if (mode == 1) {mode1(keyval);} // Rotors
+  else if (mode == 2) {mode2(keyval);} // Inrings
+  else if (mode == 3) {mode3(keyval);} // Outrings
+  else if (mode == 4) {mode4(keyval);} // Plugs
+  else if (mode == 5) {mode5(keyval);} // Run
   else {mode = 0;}
 }

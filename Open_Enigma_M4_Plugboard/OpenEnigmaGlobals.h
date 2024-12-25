@@ -9,7 +9,6 @@
 #include "OpenEnigmaConstants.h"
 
 extern bool windex;
-extern int keyval;
 extern int behavior;
 
 extern int wheel[4][3];

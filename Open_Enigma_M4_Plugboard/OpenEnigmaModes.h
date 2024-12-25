@@ -10,12 +10,12 @@
 
 // Declare functions
 void modeselect(int &mode);
-void mode0();
-void mode1();
-void mode2();
-void mode3();
-void mode4();
-void mode5();
+void mode0(int keyval);
+void mode1(int keyval);
+void mode2(int keyval);
+void mode3(int keyval);
+void mode4(int keyval);
+void mode5(int keyval);
 int calcprocessval(int ringpos, int offset, int pv);
 int calcprocessvali(int ringpos, int offset, int pv);
 
