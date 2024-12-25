@@ -15,10 +15,10 @@
 /**
  * Function to change operating Mode
  */
-void modeselect() {
+void modeselect(int &mode) {
   mode++;
   if (mode >=6) {mode = 0;}
-  if (DEBUG) {Serial.print("modeselect() : mode="); Serial.println(mode);}
+  if (DEBUG) {Serial.println("modeselect(" + String(mode) + ")");}
   windex = false;
 }
 

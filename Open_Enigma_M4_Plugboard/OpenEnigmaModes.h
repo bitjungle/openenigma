@@ -9,7 +9,7 @@
 #include "OpenEnigmaWheelWiring.h"
 
 // Declare functions
-void modeselect();
+void modeselect(int &mode);
 void mode0();
 void mode1();
 void mode2();

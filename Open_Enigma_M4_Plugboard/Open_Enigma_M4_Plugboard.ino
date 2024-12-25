@@ -46,7 +46,6 @@ int lampval = 100;
 int procesval = 0;
 int procesvala = 0;
 
-int mode = 0;
 int mdex = 0;
 
 int behavior = 0; // Switch between various Enigma models 
@@ -82,6 +81,7 @@ int pluguse = 0; // holds the total nomber of plugs used (10 max)
  */
 unsigned long time;  // Number of milliseconds since start
 unsigned long otime; // Used in keyboard debounce code
+int mode; // Current mode of operation
 
 
 /**
@@ -91,6 +91,9 @@ void setup() {
   // Initialize time variables
   time = millis();
   otime = time;
+
+  // Initialize mode
+  mode = 0;
 
   // Initialize all 29 LED pins as Output  
   for (int index = 0; index <= 2; index++) {
@@ -153,7 +156,7 @@ void loop() {
     if (DEBUG) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
 
-  if ((keyval == 45) && (windex)) {modeselect();}
+  if ((keyval == 45) && (windex)) {modeselect(mode);}
   // The whole Enigma machine operation revolves around which operating mode is current  
   if (mode == 0) {mode0();}
   else if (mode == 1) {mode1();} // Rotors

@@ -8,7 +8,6 @@
 #define OPENENIGMA_GLOBALS_H
 #include "OpenEnigmaConstants.h"
 
-extern int mode;
 extern int mdex;
 extern bool windex;
 extern int keyval;
