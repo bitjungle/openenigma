@@ -8,7 +8,7 @@
 #define OPENENIGMA_LAMP_FUNCTIONS_H
 
 // Declare functions
-void lampita();
-void lampitb();
+void lampita(int lampval);
+void lampitb(int lampval);
 
 #endif // OPENENIGMA_LAMP_FUNCTIONS_H

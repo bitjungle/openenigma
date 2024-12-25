@@ -27,14 +27,13 @@ void modeselect(int &mode) {
  * Default Mode: Enigma is a typewriter
  */
 void mode0() {
+  int lampval = 100; // Default value is for a function key
   if ((keyval >= 0) && (keyval <= 25)) {
     lampval = keyval;
-  } else {
-    lampval = 100;
   }
-  lampita();
+  lampita(lampval);
   delay(3);
-  lampitb();
+  lampitb(lampval);
   marquee();
 }
 
@@ -162,10 +161,10 @@ void mode1() {
     dig1 = 36;
   } 
 
-  lampval = reflect[0]; // Indicate selected reflector B/C in the lamp array
-  lampita();
+  int lampval = reflect[0]; // Indicate selected reflector B/C in the lamp array
+  lampita(lampval);
   delay(3);
-  lampitb();
+  lampitb(lampval);
   nixisend();
   
   digitalWrite(LED1, LOW);
@@ -418,20 +417,17 @@ void mode4() {
  */
 void mode5() {
   int pv = 0;
+  int lampval = 100; // Default value is for a function key
   digitalWrite(LED5, HIGH);
   boolean printsignalpath = false;
   
   char signalpath[13]; // Used for serial out for studying the internals of the Enigma
 
-  if (keyval >= 26) {  // A function key has been pressed
-    lampval = 100;
-  } else {             // A character key has been pressed
-    if ((keyval >= 0) && (keyval <= 25)) {  
-      if (windex) { 
-        printsignalpath = true;
-        procesvala = keyval;  
-        indexwheels();
-      }
+  if ((keyval >= 0) && (keyval <= 25)) {  
+    if (windex) { 
+      printsignalpath = true;
+      procesvala = keyval;  
+      indexwheels();
     }
 
     // Character input
@@ -563,9 +559,9 @@ void mode5() {
   dig1 = wheel[3][2];
   if (behavior > 1) {dig1 = 36;} // Enigma M3 or Norenigma
   
-  lampita();
+  lampita(lampval);
   delay(3);
-  lampitb();
+  lampitb(lampval);
   
   nixisend();
   

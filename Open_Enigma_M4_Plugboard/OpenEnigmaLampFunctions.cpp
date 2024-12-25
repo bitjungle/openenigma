@@ -10,11 +10,11 @@
 /**
  * Helper Function to light the proper key 
  */
-void lampita() {
+void lampita(int lampval){ 
   if (lampval <= 25) {
   digitalWrite(LAMPARRAY[lampval][0],0);
   digitalWrite(LAMPARRAY[lampval][1],0);
-  if (DEBUG && windex) {Serial.print("lampita() : lampval=");Serial.println(lampval);}
+  if (DEBUG && windex) {Serial.println("lampita(" + String(lampval) + ")");}
   delay(1);
   }
 }
@@ -22,10 +22,10 @@ void lampita() {
 /**
  * 
  */
-void lampitb(){
+void lampitb(int lampval) {
   if (lampval <= 25) {
     digitalWrite(LAMPARRAY[lampval][0],1);
     digitalWrite(LAMPARRAY[lampval][1],1);  
-    if (DEBUG && windex) {Serial.print("lampitb() : lampval=");Serial.println(lampval);}
+    if (DEBUG && windex) {Serial.println("lampitb(" + String(lampval) + ")");}
   }
 }
