@@ -64,7 +64,6 @@ int reflect[2] = {1,0};
 // position 0 holds use -  position 1 holds value
 int plugval[2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                             {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}};
-int pluguse = 0; // holds the total nomber of plugs used (10 max)
 
 /**
  * Define global variables only used in the main loop, initialized in setup()
@@ -76,6 +75,7 @@ int keyval; // currently pressed key value
 int kvalo;  // last read key value
 boolean windex;   // windex showing true indicates the return of a fresh key stroke
 boolean plugread; // Toggle after plogboard has been read
+int pluguse;      // holds the total nomber of plugs used (10 max)
 
 
 /**
@@ -93,6 +93,7 @@ void setup() {
 
   // Initialize plugboard variables
   plugread = false;
+  pluguse = 0;
 
   // Initialize mode
   mode = 0;
@@ -172,7 +173,7 @@ void loop() {
   else if (mode == 1) {mode1(keyval, windex);} // Rotors
   else if (mode == 2) {mode2(keyval, windex);} // Inrings
   else if (mode == 3) {mode3(keyval, windex);} // Outrings
-  else if (mode == 4) {mode4(keyval, windex, plugread);} // Plugs
+  else if (mode == 4) {mode4(keyval, windex, plugread, pluguse);} // Plugs
   else if (mode == 5) {mode5(keyval, windex);} // Run
   else {mode = 0;}
 }

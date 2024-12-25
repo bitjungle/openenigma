@@ -9,6 +9,6 @@
 #include "OpenEnigmaConstants.h"
 
 // Declare functions
-void readplugs(bool &plugread);
+void readplugs(bool &plugread, int &pluguse);
 
 #endif // OPENENIGMA_PLUGBOARD_FUNCTIONS_H

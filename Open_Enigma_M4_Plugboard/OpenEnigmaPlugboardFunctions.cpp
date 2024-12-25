@@ -11,7 +11,7 @@
 /**
  * Read the plugboard settings
  */   
-void readplugs(bool &plugread) {
+void readplugs(bool &plugread, int &pluguse) {
   for (int index = 0 ; index <= 24; index++) {
     pinMode(PLUGPINS[index], OUTPUT);
     digitalWrite(PLUGPINS[index], LOW); 

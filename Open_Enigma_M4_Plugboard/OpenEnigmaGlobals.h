@@ -16,8 +16,6 @@ extern int reflect[2];
 extern int procesval;
 extern int procesvala;
 
-extern int pluguse;
-
 extern int plugval[2][NUMCHARS];
 
 // Define each sixteen-segment display character
