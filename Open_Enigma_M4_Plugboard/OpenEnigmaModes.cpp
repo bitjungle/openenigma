@@ -27,6 +27,9 @@ void modeselect(int &mode, bool &windex) {
  * Default Mode: Enigma is a typewriter
  */
 void mode0(int keyval, bool &windex) {
+  if (DEBUG && windex) {Serial.println("mode0(" 
+    + String(keyval) + "," 
+      + String(windex) +")");}
   int lampval = 100; // Default value is for a function key
   if ((keyval >= 0) && (keyval <= 25)) {
     lampval = keyval;
@@ -43,6 +46,9 @@ void mode0(int keyval, bool &windex) {
  * Select the rotors & the reflector  
  */
 void mode1(int keyval, bool &windex) {
+  if (DEBUG && windex) {Serial.println("mode1(" 
+    + String(keyval) + "," 
+    + String(windex) +")");}
   int index;
   digitalWrite(LED1, HIGH);
 
@@ -180,6 +186,9 @@ void mode1(int keyval, bool &windex) {
  * Position the inner setting of each rotor  
  */
 void mode2(int keyval, bool &windex) {
+  if (DEBUG && windex) {Serial.println("mode2(" 
+    + String(keyval) + "," 
+    + String(windex) +")");}
   digitalWrite(LED2, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -261,6 +270,9 @@ void mode2(int keyval, bool &windex) {
  * Position the Start character of each Wheel  
  */
 void mode3(int keyval, bool &windex) {
+  if (DEBUG && windex) {Serial.println("mode3(" 
+    + String(keyval) + "," 
+    + String(windex) +")");}
   digitalWrite(LED3, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -339,6 +351,11 @@ void mode3(int keyval, bool &windex) {
  * Define the Plugboard pairs  
  */
 void mode4(int keyval, boolean &windex, boolean &plugread, int &pluguse) {
+  if (DEBUG && windex) {Serial.println("mode4(" 
+    + String(keyval) + "," 
+    + String(windex)  + ","
+    + String(plugread) + ","
+    + String(pluguse) + ")");}
   static int paindex = 0; 
   static int pbindex = 1;
 
@@ -421,6 +438,9 @@ void mode4(int keyval, boolean &windex, boolean &plugread, int &pluguse) {
  * This is normal operation mode to Encrypt/Decrypt  
  */
 void mode5(int keyval, bool &windex) {
+  if (DEBUG && windex) {Serial.println("mode5(" 
+    + String(keyval) + "," 
+    + String(windex) +")");}
   int pv = 0;
   int lampval = 100; // Default value is for a function key
   digitalWrite(LED5, HIGH);
@@ -550,7 +570,7 @@ void mode5(int keyval, bool &windex) {
     signalpath[11] = CHARS[procesval]; 
     signalpath[12] = '\0';   
     if (DEBUG && printsignalpath) {
-      Serial.print("mode5() : "); 
+      Serial.print("Signal path: "); 
       Serial.println(signalpath);
     }    
   }
