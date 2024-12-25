@@ -11,7 +11,6 @@
 extern int mdex;
 extern bool windex;
 extern int keyval;
-extern int kvalo;
 extern int behavior;
 
 extern int wheel[4][3];

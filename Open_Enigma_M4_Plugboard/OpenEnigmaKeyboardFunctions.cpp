@@ -67,8 +67,5 @@ int readkbde() {
   //Starts key debounce timer
   if ((kval >= 0) && (kval <= 99)) {windex = true;}  
 
-  // prints keybord value to serial monitor
-  if (DEBUG && kval != kvalo && kval != 100) {Serial.print("readkbde() : kval="); Serial.println(kval);}
-  if (DEBUG && kval != kvalo && kval <= 26) {Serial.print("readkbde() : char="); Serial.println(CHARS[kval]);}
   return kval;
 }

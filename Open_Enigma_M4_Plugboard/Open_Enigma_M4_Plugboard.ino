@@ -38,7 +38,6 @@
 * TODO: Narrow scope where possible.
 */
 int keyval = 100; // currently pressed key value
-int kvalo = 100;  // last read key value
 
 boolean windex = false; // windex showing true indicates the return of a fresh key stroke
 
@@ -81,6 +80,7 @@ int pluguse = 0; // holds the total nomber of plugs used (10 max)
 unsigned long time;  // Number of milliseconds since start
 unsigned long otime; // Used in keyboard debounce code
 int mode; // Current mode of operation
+int kvalo;  // last read key value
 
 
 /**
@@ -90,6 +90,9 @@ void setup() {
   // Initialize time variables
   time = millis();
   otime = time;
+
+  // Initialize last read key value
+  kvalo = 100;
 
   // Initialize mode
   mode = 0;
@@ -137,10 +140,18 @@ void loop() {
   if (time > otime + 100) {
     keyval = readkbde();
     if (keyval < 99) {otime = millis();}
+      // prints keybord value to serial monitor
+    if (DEBUG && keyval != kvalo && keyval != 100) {
+      Serial.print("readkbde() -> " + String(keyval));
+      if (keyval <= 26) {Serial.println(" -> " + String(CHARS[keyval]));}
+      else {Serial.println();}
+      }
   }
-  if (keyval == kvalo) {windex = false;} // No new keystroke detected
-  kvalo = keyval;
-
+  if (keyval == kvalo) {
+    windex = false; // No new keystroke detected
+  } else {
+    kvalo = keyval; // update last read key value
+  }
   if ((mode == 0) && (keyval == 46) && (windex)) { 
     // Change behavior in mode 0 using key 46 (top left key)
     // 0 : Enigma M4 
