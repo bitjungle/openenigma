@@ -42,8 +42,6 @@ int procesvala = 0;
 
 int behavior = 0; // Switch between various Enigma models 
 
-boolean plugread = false; // Toggle after plogboard has been read
-
 // Define each sixteen-segment display character
 int dig1 = 37;
 int dig2 = 37;
@@ -76,7 +74,9 @@ unsigned long otime; // Used in keyboard debounce code
 int mode;   // Current mode of operation
 int keyval; // currently pressed key value
 int kvalo;  // last read key value
-boolean windex; // windex showing true indicates the return of a fresh key stroke
+boolean windex;   // windex showing true indicates the return of a fresh key stroke
+boolean plugread; // Toggle after plogboard has been read
+
 
 /**
  * Configure Arduino pins and start serial communication
@@ -90,6 +90,9 @@ void setup() {
   keyval = 100;
   kvalo = 100;
   windex = false;
+
+  // Initialize plugboard variables
+  plugread = false;
 
   // Initialize mode
   mode = 0;
@@ -169,7 +172,7 @@ void loop() {
   else if (mode == 1) {mode1(keyval, windex);} // Rotors
   else if (mode == 2) {mode2(keyval, windex);} // Inrings
   else if (mode == 3) {mode3(keyval, windex);} // Outrings
-  else if (mode == 4) {mode4(keyval, windex);} // Plugs
+  else if (mode == 4) {mode4(keyval, windex, plugread);} // Plugs
   else if (mode == 5) {mode5(keyval, windex);} // Run
   else {mode = 0;}
 }

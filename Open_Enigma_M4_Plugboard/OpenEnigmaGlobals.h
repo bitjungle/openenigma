@@ -16,7 +16,6 @@ extern int reflect[2];
 extern int procesval;
 extern int procesvala;
 
-extern boolean plugread;
 extern int pluguse;
 
 extern int plugval[2][NUMCHARS];

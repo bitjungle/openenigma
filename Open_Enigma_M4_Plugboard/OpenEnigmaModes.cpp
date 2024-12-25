@@ -338,11 +338,11 @@ void mode3(int keyval, bool &windex) {
  * Mode 4
  * Define the Plugboard pairs  
  */
-void mode4(int keyval, bool &windex) {
+void mode4(int keyval, boolean &windex, boolean &plugread) {
   static int paindex = 0; 
   static int pbindex = 1;
 
-  if (!plugread) {readplugs(); }
+  if (!plugread) {readplugs(plugread); }
   int index = 0;
   digitalWrite(LED4, HIGH);
 
