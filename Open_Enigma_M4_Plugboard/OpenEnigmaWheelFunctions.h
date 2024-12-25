@@ -9,6 +9,6 @@
 #include "OpenEnigmaConstants.h"
 
 // Declare functions
-void indexwheels();
+void indexwheels(bool &windex);
 
 #endif // OPENENIGMA_WHEEL_FUNCTIONS_H

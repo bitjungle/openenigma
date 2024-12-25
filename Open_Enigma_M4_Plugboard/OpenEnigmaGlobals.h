@@ -8,7 +8,6 @@
 #define OPENENIGMA_GLOBALS_H
 #include "OpenEnigmaConstants.h"
 
-extern bool windex;
 extern int behavior;
 
 extern int wheel[4][3];

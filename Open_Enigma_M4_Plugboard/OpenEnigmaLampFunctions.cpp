@@ -14,8 +14,6 @@ void lampita(int lampval){
   if (lampval <= 25) {
   digitalWrite(LAMPARRAY[lampval][0],0);
   digitalWrite(LAMPARRAY[lampval][1],0);
-  if (DEBUG && windex) {Serial.println("lampita(" + String(lampval) + ")");}
-  delay(1);
   }
 }
 
@@ -26,6 +24,5 @@ void lampitb(int lampval) {
   if (lampval <= 25) {
     digitalWrite(LAMPARRAY[lampval][0],1);
     digitalWrite(LAMPARRAY[lampval][1],1);  
-    if (DEBUG && windex) {Serial.println("lampitb(" + String(lampval) + ")");}
   }
 }

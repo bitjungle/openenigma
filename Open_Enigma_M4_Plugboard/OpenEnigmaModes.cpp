@@ -15,7 +15,7 @@
 /**
  * Function to change operating Mode
  */
-void modeselect(int &mode) {
+void modeselect(int &mode, bool &windex) {
   mode++;
   if (mode >=6) {mode = 0;}
   if (DEBUG) {Serial.println("modeselect(" + String(mode) + ")");}
@@ -26,11 +26,12 @@ void modeselect(int &mode) {
  * Mode 0
  * Default Mode: Enigma is a typewriter
  */
-void mode0(int keyval) {
+void mode0(int keyval, bool &windex) {
   int lampval = 100; // Default value is for a function key
   if ((keyval >= 0) && (keyval <= 25)) {
     lampval = keyval;
   }
+  if (DEBUG && windex) {Serial.println("lampval = " + String(lampval));}
   lampita(lampval);
   delay(3);
   lampitb(lampval);
@@ -41,7 +42,7 @@ void mode0(int keyval) {
  * Mode 1
  * Select the rotors & the reflector  
  */
-void mode1(int keyval) {
+void mode1(int keyval, bool &windex) {
   int index;
   digitalWrite(LED1, HIGH);
 
@@ -90,6 +91,7 @@ void mode1(int keyval) {
       windex = false;
     }
   }
+
   if (windex) {
     if (keyval == 49) { // Function button wheel 1 up
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index++) {
@@ -101,6 +103,7 @@ void mode1(int keyval) {
       windex = false;
     }
   }
+
   if (windex) { // Function button wheel 3 down
     if (keyval == 42) { 
       for(index = wheel[2][0];(index == wheel[1][0]) || (index == wheel[0][0]) || (index == wheel[2][0]); index--) {
@@ -116,6 +119,7 @@ void mode1(int keyval) {
       windex = false;
     }
   }
+
   if (windex) { // Function button wheel 2 down
     if (keyval == 41) { 
       for(index = wheel[1][0];(index == wheel[2][0]) || (index == wheel[0][0]) || (index == wheel[1][0]); index--) {
@@ -131,6 +135,7 @@ void mode1(int keyval) {
       windex = false;
     }
   }
+
   if (windex) { // Function button wheel 1 down
     if (keyval == 40) { 
       for(index = wheel[0][0];(index == wheel[2][0]) || (index == wheel[1][0]) || (index == wheel[0][0]); index--) {
@@ -174,7 +179,7 @@ void mode1(int keyval) {
  * Mode 2
  * Position the inner setting of each rotor  
  */
-void mode2(int keyval) {
+void mode2(int keyval, bool &windex) {
   digitalWrite(LED2, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -255,7 +260,7 @@ void mode2(int keyval) {
  * Mode 3
  * Position the Start character of each Wheel  
  */
-void mode3(int keyval) {
+void mode3(int keyval, bool &windex) {
   digitalWrite(LED3, HIGH);
   if (windex) {
     if (behavior < 2) { // Enigma M4
@@ -333,7 +338,7 @@ void mode3(int keyval) {
  * Mode 4
  * Define the Plugboard pairs  
  */
-void mode4(int keyval) {
+void mode4(int keyval, bool &windex) {
   static int paindex = 0; 
   static int pbindex = 1;
 
@@ -415,7 +420,7 @@ void mode4(int keyval) {
  * Mode 5
  * This is normal operation mode to Encrypt/Decrypt  
  */
-void mode5(int keyval) {
+void mode5(int keyval, bool &windex) {
   int pv = 0;
   int lampval = 100; // Default value is for a function key
   digitalWrite(LED5, HIGH);
@@ -427,7 +432,7 @@ void mode5(int keyval) {
     if (windex) { 
       printsignalpath = true;
       procesvala = keyval;  
-      indexwheels();
+      indexwheels(windex);
     }
 
     // Character input

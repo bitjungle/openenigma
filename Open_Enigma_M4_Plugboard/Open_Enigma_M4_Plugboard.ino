@@ -37,8 +37,6 @@
 * Setting initial values for global variables used across the code
 * TODO: Narrow scope where possible.
 */
-boolean windex = false; // windex showing true indicates the return of a fresh key stroke
-
 int procesval = 0;
 int procesvala = 0;
 
@@ -75,10 +73,10 @@ int pluguse = 0; // holds the total nomber of plugs used (10 max)
  */
 unsigned long time;  // Number of milliseconds since start
 unsigned long otime; // Used in keyboard debounce code
-int mode; // Current mode of operation
+int mode;   // Current mode of operation
 int keyval; // currently pressed key value
-int kvalo; // last read key value
-
+int kvalo;  // last read key value
+boolean windex; // windex showing true indicates the return of a fresh key stroke
 
 /**
  * Configure Arduino pins and start serial communication
@@ -91,6 +89,7 @@ void setup() {
   // Initialize key values
   keyval = 100;
   kvalo = 100;
+  windex = false;
 
   // Initialize mode
   mode = 0;
@@ -138,7 +137,6 @@ void loop() {
   if (time > otime + 100) {
     keyval = readkbde();
     if (keyval < 99) {otime = millis();}
-      // prints keybord value to serial monitor
     if (DEBUG && keyval != kvalo && keyval != 100) {
       Serial.print("readkbde() -> " + String(keyval));
       if (keyval <= 26) {Serial.println(" -> " + String(CHARS[keyval]));}
@@ -149,6 +147,7 @@ void loop() {
     windex = false; // No new keystroke detected
   } else {
     kvalo = keyval; // update last read key value
+    if ((keyval >= 0) && (keyval <= 99)) {windex = true;} //Starts key debounce timer
   }
   if ((mode == 0) && (keyval == 46) && (windex)) { 
     // Change behavior in mode 0 using key 46 (top left key)
@@ -164,13 +163,13 @@ void loop() {
     if (DEBUG) {Serial.print("loop() : behavior="); Serial.println(behavior);}
   }
 
-  if ((keyval == 45) && (windex)) {modeselect(mode);}
+  if ((keyval == 45) && (windex)) {modeselect(mode, windex);}
   // The whole Enigma machine operation revolves around which operating mode is current  
-  if (mode == 0) {mode0(keyval);}
-  else if (mode == 1) {mode1(keyval);} // Rotors
-  else if (mode == 2) {mode2(keyval);} // Inrings
-  else if (mode == 3) {mode3(keyval);} // Outrings
-  else if (mode == 4) {mode4(keyval);} // Plugs
-  else if (mode == 5) {mode5(keyval);} // Run
+  if (mode == 0) {mode0(keyval, windex);}
+  else if (mode == 1) {mode1(keyval, windex);} // Rotors
+  else if (mode == 2) {mode2(keyval, windex);} // Inrings
+  else if (mode == 3) {mode3(keyval, windex);} // Outrings
+  else if (mode == 4) {mode4(keyval, windex);} // Plugs
+  else if (mode == 5) {mode5(keyval, windex);} // Run
   else {mode = 0;}
 }

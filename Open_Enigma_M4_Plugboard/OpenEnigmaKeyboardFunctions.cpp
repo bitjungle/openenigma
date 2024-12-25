@@ -64,8 +64,5 @@ int readkbde() {
   else if (inval[3] < 93 ) {kval = 11;}
   else {kval = 100;}
 
-  //Starts key debounce timer
-  if ((kval >= 0) && (kval <= 99)) {windex = true;}  
-
   return kval;
 }

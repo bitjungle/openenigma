@@ -35,7 +35,7 @@
  * 6. Resets the `windex1` and `windex2` flags.
  * 7. If `DEBUG` is true, prints the current positions of the wheels.
  */
-void indexwheels() {
+void indexwheels(bool &windex) {
   static boolean windex1 = false;
   static boolean windex2 = false;
 

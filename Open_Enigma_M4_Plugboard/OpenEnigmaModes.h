@@ -9,13 +9,13 @@
 #include "OpenEnigmaWheelWiring.h"
 
 // Declare functions
-void modeselect(int &mode);
-void mode0(int keyval);
-void mode1(int keyval);
-void mode2(int keyval);
-void mode3(int keyval);
-void mode4(int keyval);
-void mode5(int keyval);
+void modeselect(int &mode, bool &windex);
+void mode0(int keyval, bool &windex);
+void mode1(int keyval, bool &windex);
+void mode2(int keyval, bool &windex);
+void mode3(int keyval, bool &windex);
+void mode4(int keyval, bool &windex);
+void mode5(int keyval, bool &windex);
 int calcprocessval(int ringpos, int offset, int pv);
 int calcprocessvali(int ringpos, int offset, int pv);
 
