@@ -34,7 +34,7 @@ void nixisend() {
  */
 void marquee() {
   static unsigned long mtime;  
-  time = millis();
+  unsigned long time = millis();
   if ( mtime < time) {
     mtime = time + 400;
     mdex++;

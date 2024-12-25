@@ -2,16 +2,11 @@
  * OpenEnigmaGlobals.h
  * Part of Open Enigma M4 Plugboard project
  * See Open_Enigma_M4_Plugboard.ino for more information
- * 2024-12-22 - bitjungle
+ * 2024-12-22 - bitjungle - initial version
  */
 #ifndef OPENENIGMA_GLOBALS_H
 #define OPENENIGMA_GLOBALS_H
 #include "OpenEnigmaConstants.h"
-
-extern unsigned long time;// Number of milliseconds since start
-extern unsigned long otime;
-extern int behavior; // Switch between various Enigma models 
-
 
 extern int mode;
 extern int mdex;
@@ -19,6 +14,7 @@ extern bool windex;
 extern int keyval;
 extern int kvalo;
 extern int lampval;
+extern int behavior;
 
 extern int wheel[4][3];
 extern int reflect[2];

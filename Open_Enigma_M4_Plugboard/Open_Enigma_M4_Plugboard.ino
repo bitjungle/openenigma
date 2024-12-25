@@ -34,11 +34,9 @@
 
 
 /**
-* Setting initial values for global variables
+* Setting initial values for global variables used across the code
+* TODO: Narrow scope where possible.
 */
-unsigned long time = millis();// Number of milliseconds since start
-unsigned long otime = time;   // Used in keyboard debounce code
-
 int keyval = 100; // currently pressed key value
 int kvalo = 100;  // last read key value
 
@@ -80,9 +78,20 @@ int plugval[2][NUMCHARS] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 int pluguse = 0; // holds the total nomber of plugs used (10 max)
 
 /**
+ * Define global variables only used in the main loop, initialized in setup()
+ */
+unsigned long time;  // Number of milliseconds since start
+unsigned long otime; // Used in keyboard debounce code
+
+
+/**
  * Configure Arduino pins and start serial communication
  */
 void setup() {
+  // Initialize time variables
+  time = millis();
+  otime = time;
+
   // Initialize all 29 LED pins as Output  
   for (int index = 0; index <= 2; index++) {
     pinMode(LAMPPINS[index], OUTPUT);
@@ -123,7 +132,10 @@ void loop() {
  
   // Keyboard debounce & test for new key pressed  
   time = millis();
-  if (time > otime + 100) {keyval = readkbde();}
+  if (time > otime + 100) {
+    keyval = readkbde();
+    if (keyval < 99) {otime = millis();}
+  }
   if (keyval == kvalo) {windex = false;} // No new keystroke detected
   kvalo = keyval;
 
